@@ -1,0 +1,25 @@
+name: Deploy Chat Update
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+      - name: Copy updated index.html from main
+        run: |
+          git fetch origin main
+          git checkout origin/main -- code/sir-melvine-dashboard/index.html
+          cp code/sir-melvine-dashboard/index.html docs/index.html
+      - name: Commit and push
+        run: |
+          git config user.name "Nebula Bot"
+          git config user.email "nebula@nebula.gg"
+          git add docs/index.html
+          git diff --cached --quiet || git commit -m "feat: wire live Nebula AI chat via webhook"
+          git push origin gh-pages
