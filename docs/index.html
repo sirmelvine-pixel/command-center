@@ -609,24 +609,48 @@ function toggleAI(){
   document.getElementById('aiPanel').classList.toggle('hidden',!aiVisible);
 }
 
+// ── NEBULA LIVE AI ──
+const NEBULA_WEBHOOK='https://api.nebula.gg/webhooks/triggers/trig_069aca72e3f4776a8000fa0446ad7837/webhook';
+const NEBULA_SECRET='nh8f3nsWxn7ux4GCOoOmuLxwUZCmtXsP35eB0fciSIY';
+
+async function callNebula(message,history){
+  const payload={message,history:history.slice(-10).map(m=>({role:m.role,text:m.text}))};
+  const resp=await fetch(NEBULA_WEBHOOK,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Webhook-Secret':NEBULA_SECRET},
+    body:JSON.stringify(payload)
+  });
+  if(!resp.ok)throw new Error('HTTP '+resp.status);
+  const data=await resp.json();
+  return data.reply||data.response||data.message||data.output||(typeof data==='string'?data:'...');
+}
+
+function addTypingIndicator(cont){
+  const el=document.createElement('div');el.className='msg bot';el.setAttribute('data-typing','1');
+  el.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  cont.appendChild(el);cont.scrollTop=cont.scrollHeight;return el;
+}
+
 function aiKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsg();}}
-function sendAIMsg(){
+async function sendAIMsg(){
   const inp=document.getElementById('aiInput');
   const txt=inp.value.trim();if(!txt)return;
   const t=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
   desktopMsgs.push({role:'user',text:txt,time:t});
-  inp.value='';autoResize(inp);
+  inp.value='';autoResize(inp);inp.disabled=true;
   const cont=document.getElementById('aiMsgs');
   renderMsgs(cont,desktopMsgs);
-  // typing indicator
-  const typing=document.createElement('div');typing.className='msg bot';typing.id='typing';
-  typing.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-  cont.appendChild(typing);cont.scrollTop=cont.scrollHeight;
-  setTimeout(()=>{
+  const typing=addTypingIndicator(cont);
+  try{
+    const reply=await callNebula(txt,desktopMsgs);
     typing.remove();
-    desktopMsgs.push({role:'bot',text:"I've received your message, Sir Melvine. I'm processing your request — for live AI responses, connect me to the Nebula backend.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
-    renderMsgs(cont,desktopMsgs);
-  },1500);
+    desktopMsgs.push({role:'bot',text:reply,time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }catch(err){
+    typing.remove();
+    desktopMsgs.push({role:'bot',text:"I'm having trouble connecting right now, Sir Melvine. Please try again in a moment.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }
+  inp.disabled=false;inp.focus();
+  renderMsgs(cont,desktopMsgs);
 }
 
 // MOBILE AI
@@ -639,22 +663,25 @@ function closeMobileAI(e){
     document.getElementById('aiModal').classList.remove('open');
 }
 function aiKeydownMobile(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsgMobile();}}
-function sendAIMsgMobile(){
+async function sendAIMsgMobile(){
   const inp=document.getElementById('aiInputMobile');
   const txt=inp.value.trim();if(!txt)return;
   const t=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
   mobileMsgs.push({role:'user',text:txt,time:t});
-  inp.value='';autoResize(inp);
+  inp.value='';autoResize(inp);inp.disabled=true;
   const cont=document.getElementById('aiMsgsMobile');
   renderMsgs(cont,mobileMsgs);
-  const typing=document.createElement('div');typing.className='msg bot';
-  typing.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-  cont.appendChild(typing);cont.scrollTop=cont.scrollHeight;
-  setTimeout(()=>{
+  const typing=addTypingIndicator(cont);
+  try{
+    const reply=await callNebula(txt,mobileMsgs);
     typing.remove();
-    mobileMsgs.push({role:'bot',text:"I've received your message, Sir Melvine. I'm processing your request — for live AI responses, connect me to the Nebula backend.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
-    renderMsgs(cont,mobileMsgs);
-  },1500);
+    mobileMsgs.push({role:'bot',text:reply,time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }catch(err){
+    typing.remove();
+    mobileMsgs.push({role:'bot',text:"I'm having trouble connecting right now, Sir Melvine. Please try again in a moment.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }
+  inp.disabled=false;inp.focus();
+  renderMsgs(cont,mobileMsgs);
 }
 
 // VOICE
