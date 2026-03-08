@@ -1,2 +1,718 @@
-# Command Center
-Sir Melvine Dashboard
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#09090F"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Sir Melvine"/>
+<title>Sir Melvine · Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#09090F;--s1:#0F0F18;--s2:#141420;--s3:#1C1C2C;--s4:#242438;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--gold:#F2A72B;--gold2:#FFD080;--gold-g:rgba(242,167,43,0.10);--red:#E8364A;--red-g:rgba(232,54,74,0.10);--blue:#4B8EFF;--blue-g:rgba(75,142,255,0.10);--green:#30D47A;--green-g:rgba(48,212,122,0.10);--purple:#9B6EFF;--purple-g:rgba(155,110,255,0.10);--text:#ECEEF8;--muted:#5A5C72;--muted2:#8587A2;--r:8px;--r2:14px;--r3:20px;--sw:248px;--th:56px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+button{font-family:'Epilogue',sans-serif;cursor:pointer;border:none;outline:none;}
+input,select,textarea{font-family:'Epilogue',sans-serif;outline:none;}
+a{color:inherit;text-decoration:none;}
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--s4);border-radius:2px;}
+
+/* TOPBAR */
+.topbar{height:var(--th);flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;z-index:200;position:relative;}
+.menu-btn{width:32px;height:32px;border-radius:var(--r);background:none;color:var(--muted2);display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.2s;flex-shrink:0;}
+.menu-btn:hover{background:var(--s3);color:var(--text);}
+.brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--bg);font-weight:900;}
+.live-clock{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:1px;margin-left:16px;}
+.live-clock .secs{color:var(--gold);}
+.tb-date{font-size:11px;color:var(--muted2);font-family:'JetBrains Mono',monospace;padding-left:12px;border-left:1px solid var(--border2);}
+.tb-right{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.tb-btn{width:32px;height:32px;border-radius:var(--r);background:none;color:var(--muted2);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:relative;}
+.tb-btn:hover{background:var(--s3);color:var(--text);}
+.notif-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--red);border:2px solid var(--s1);}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#A06010);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--bg);cursor:pointer;border:2px solid rgba(242,167,43,0.3);}
+
+/* LAYOUT */
+.app-body{flex:1;display:flex;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width 0.28s cubic-bezier(0.4,0,0.2,1);}
+.sidebar.collapsed{width:56px;}
+.sidebar-top{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 8px;}
+.nav-group-label{font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);padding:10px 8px 6px;white-space:nowrap;overflow:hidden;transition:opacity 0.2s;}
+.sidebar.collapsed .nav-group-label{opacity:0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:var(--r2);color:var(--muted2);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-bottom:1px;white-space:nowrap;overflow:hidden;position:relative;}
+.nav-item:hover{background:var(--s3);color:var(--text);}
+.nav-item.active{background:var(--gold-g);color:var(--gold);font-weight:600;}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 2px 2px 0;background:var(--gold);}
+.nav-ico{font-size:16px;flex-shrink:0;width:22px;text-align:center;}
+.nav-txt{overflow:hidden;transition:opacity 0.2s,width 0.28s;}
+.sidebar.collapsed .nav-txt{opacity:0;width:0;}
+.nav-pill{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;flex-shrink:0;transition:opacity 0.2s;}
+.sidebar.collapsed .nav-pill{opacity:0;}
+.sidebar-bottom{padding:8px;border-top:1px solid var(--border);flex-shrink:0;}
+.collapse-btn{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:var(--r2);background:none;width:100%;color:var(--muted2);font-size:13px;font-weight:500;transition:all 0.15s;white-space:nowrap;overflow:hidden;}
+.collapse-btn:hover{background:var(--s3);color:var(--text);}
+.sidebar.collapsed .collapse-btn .nav-txt{opacity:0;width:0;}
+
+/* MAIN */
+.main-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.page{display:none;padding:24px;flex:1;}
+.page.active{display:block;}
+.page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--muted2);margin-bottom:22px;}
+
+/* BENTO GRID */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r3);padding:18px;transition:border-color 0.2s,transform 0.2s;}
+.card:hover{transform:translateY(-2px);}
+.card.blue{border-color:rgba(75,142,255,0.2);background:linear-gradient(135deg,var(--s2),rgba(75,142,255,0.05));}
+.card.red{border-color:rgba(232,54,74,0.2);background:linear-gradient(135deg,var(--s2),rgba(232,54,74,0.05));}
+.card.gold{border-color:rgba(242,167,43,0.2);background:linear-gradient(135deg,var(--s2),rgba(242,167,43,0.05));}
+.card.green{border-color:rgba(48,212,122,0.2);background:linear-gradient(135deg,var(--s2),rgba(48,212,122,0.05));}
+.card-ico{font-size:22px;margin-bottom:10px;}
+.card-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
+.card-val.blue{color:var(--blue);}
+.card-val.red{color:var(--red);}
+.card-val.gold{color:var(--gold);}
+.card-val.green{color:var(--green);}
+.card-label{font-size:11px;color:var(--muted2);margin-top:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px;}
+
+/* SECTION HEADER */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:14px;font-weight:700;}
+.sec-action{font-size:12px;color:var(--gold);cursor:pointer;}
+
+/* WEEK GRID */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:22px;}
+.day-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);padding:10px 8px;text-align:center;}
+.day-card.today{border-color:rgba(242,167,43,0.4);background:var(--gold-g);}
+.day-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:6px;}
+.day-card.today .day-name{color:var(--gold);}
+.day-num{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:8px;}
+.day-card.today .day-num{color:var(--gold);}
+.day-rem{font-size:10px;color:var(--muted2);line-height:1.4;}
+.day-rem-item{background:var(--s3);border-radius:4px;padding:2px 5px;margin-top:3px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* QUICK ACTIONS */
+.quick-actions{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+.qa-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r2);font-size:13px;font-weight:600;color:var(--text);transition:all 0.2s;}
+.qa-btn:hover{background:var(--s3);border-color:var(--gold);color:var(--gold);}
+.qa-btn .ico{font-size:16px;}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-month{font-size:18px;font-weight:800;}
+.cal-arrow{width:32px;height:32px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.cal-arrow:hover{background:var(--s3);border-color:var(--gold);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px;}
+.cal-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:center;padding:6px 0;}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;position:relative;transition:all 0.15s;}
+.cal-cell:hover{background:var(--s3);}
+.cal-cell.today{background:var(--gold);color:var(--bg);font-weight:800;}
+.cal-cell.other{color:var(--muted);}
+.cal-dot{width:4px;height:4px;border-radius:50%;background:var(--blue);position:absolute;bottom:4px;}
+.cal-cell.today .cal-dot{background:var(--bg);}
+.upcoming-list{display:flex;flex-direction:column;gap:8px;}
+.event-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);}
+.event-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.event-info{flex:1;}
+.event-title{font-size:13px;font-weight:600;}
+.event-time{font-size:11px;color:var(--muted2);margin-top:2px;}
+
+/* EMAIL */
+.email-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--s2);padding:4px;border-radius:var(--r2);border:1px solid var(--border);}
+.etab{flex:1;padding:8px;text-align:center;border-radius:var(--r);font-size:12px;font-weight:600;color:var(--muted2);cursor:pointer;transition:all 0.2s;}
+.etab.active{background:var(--s4);color:var(--text);}
+.email-list{display:flex;flex-direction:column;gap:6px;}
+.email-item{display:flex;gap:12px;padding:14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all 0.2s;}
+.email-item:hover{border-color:var(--border2);background:var(--s3);}
+.email-item.unread{border-left:3px solid var(--blue);}
+.email-avatar{width:36px;height:36px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+.email-body{flex:1;min-width:0;}
+.email-from{font-size:13px;font-weight:600;display:flex;justify-content:space-between;}
+.email-time{font-size:11px;color:var(--muted2);font-weight:400;}
+.email-subject{font-size:12px;color:var(--muted2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* REMINDERS */
+.rem-form{background:var(--s2);border:1px solid var(--border);border-radius:var(--r3);padding:18px;margin-bottom:18px;}
+.rem-form-title{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--gold);}
+.form-row{display:flex;gap:10px;margin-bottom:10px;}
+.form-input{flex:1;background:var(--s3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;color:var(--text);font-size:13px;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--muted);}
+.cat-select{background:var(--s3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;color:var(--text);font-size:13px;}
+.save-btn{padding:10px 20px;background:var(--gold);color:var(--bg);border-radius:var(--r);font-weight:700;font-size:13px;transition:all 0.2s;}
+.save-btn:hover{background:var(--gold2);}
+.rem-list{display:flex;flex-direction:column;gap:8px;}
+.rem-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);}
+.rem-cat{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;}
+.rem-cat.work{background:var(--blue-g);color:var(--blue);}
+.rem-cat.personal{background:var(--purple-g);color:var(--purple);}
+.rem-cat.health{background:var(--green-g);color:var(--green);}
+.rem-cat.urgent{background:var(--red-g);color:var(--red);}
+.rem-cat.other{background:var(--gold-g);color:var(--gold);}
+.rem-info{flex:1;}
+.rem-title{font-size:13px;font-weight:600;}
+.rem-time{font-size:11px;color:var(--muted2);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.rem-del{width:28px;height:28px;border-radius:var(--r);background:none;color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.rem-del:hover{background:var(--red-g);color:var(--red);}
+
+/* SETTINGS */
+.settings-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r3);padding:20px;margin-bottom:16px;}
+.settings-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;}
+.profile-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.profile-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#A06010);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:var(--bg);}
+.profile-name{font-size:16px;font-weight:800;}
+.profile-email{font-size:12px;color:var(--muted2);margin-top:2px;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-label{font-size:13px;font-weight:500;}
+.toggle-sub{font-size:11px;color:var(--muted2);margin-top:2px;}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--s4);position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+.toggle.on{background:var(--gold);}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform 0.2s;}
+.toggle.on::after{transform:translateX(18px);}
+
+/* AI PANEL */
+.ai-panel{width:320px;flex-shrink:0;background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;transition:width 0.28s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
+.ai-panel.hidden{width:0;}
+.aip-head{padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.ai-orb{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ai-title{font-size:13px;font-weight:700;flex:1;}
+.ai-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--green);}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.aip-close{width:24px;height:24px;border-radius:var(--r);background:none;color:var(--muted2);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.aip-close:hover{background:var(--s3);color:var(--text);}
+.aip-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.msg{max-width:85%;display:flex;flex-direction:column;gap:3px;}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.bot{align-self:flex-start;align-items:flex-start;}
+.msg-bubble{padding:10px 13px;border-radius:14px;font-size:12px;line-height:1.5;}
+.msg.user .msg-bubble{background:var(--gold);color:var(--bg);border-bottom-right-radius:4px;}
+.msg.bot .msg-bubble{background:var(--s3);color:var(--text);border-bottom-left-radius:4px;}
+.msg-time{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.typing{display:flex;align-items:center;gap:4px;padding:12px 14px;background:var(--s3);border-radius:14px;border-bottom-left-radius:4px;width:fit-content;}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+.aip-input{padding:12px;border-top:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:flex-end;}
+.aip-textarea{flex:1;background:var(--s3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 12px;color:var(--text);font-size:12px;resize:none;max-height:100px;line-height:1.5;transition:border-color 0.2s;}
+.aip-textarea:focus{border-color:var(--gold);}
+.aip-textarea::placeholder{color:var(--muted);}
+.aip-send{width:34px;height:34px;border-radius:var(--r);background:var(--gold);color:var(--bg);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
+.aip-send:hover{background:var(--gold2);}
+.aip-mic{width:34px;height:34px;border-radius:var(--r);background:var(--s3);border:1px solid var(--border2);color:var(--muted2);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
+.aip-mic:hover{border-color:var(--gold);color:var(--gold);}
+.aip-mic.listening{background:var(--red-g);border-color:var(--red);color:var(--red);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+
+/* MOBILE CHAT FAB */
+.chat-fab{display:none;position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--bg);font-size:22px;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(242,167,43,0.4);z-index:300;transition:transform 0.2s;}
+.chat-fab:hover{transform:scale(1.05);}
+
+/* MOBILE AI MODAL */
+.ai-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:400;align-items:flex-end;}
+.ai-modal.open{display:flex;}
+.ai-modal-inner{width:100%;height:85vh;background:var(--s1);border-radius:var(--r3) var(--r3) 0 0;display:flex;flex-direction:column;animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+
+/* BOTTOM NAV (mobile) */
+.bottom-nav{display:none;height:60px;background:var(--s1);border-top:1px solid var(--border);flex-shrink:0;align-items:center;justify-content:space-around;padding:0 8px;z-index:200;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;border-radius:var(--r);color:var(--muted2);font-size:10px;font-weight:600;cursor:pointer;transition:all 0.2s;min-width:52px;}
+.bn-item.active{color:var(--gold);}
+.bn-ico{font-size:20px;}
+.bn-label{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.bento{grid-template-columns:repeat(2,1fr);}.ai-panel{width:280px;}}
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .ai-panel{display:none;}
+  .chat-fab{display:flex;}
+  .bottom-nav{display:flex;}
+  .tb-date{display:none;}
+  .live-clock{font-size:16px;}
+  .bento{grid-template-columns:repeat(2,1fr);}
+  .week-grid{grid-template-columns:repeat(4,1fr);}
+  .page{padding:16px;}
+  body{overflow:hidden;}
+}
+@media(max-width:480px){.bento{grid-template-columns:1fr;}.week-grid{grid-template-columns:repeat(3,1fr);}.form-row{flex-direction:column;}}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 20px;color:var(--muted2);}
+.empty-ico{font-size:40px;margin-bottom:10px;}
+.empty-txt{font-size:13px;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="menu-btn" onclick="toggleSidebar()" title="Toggle menu">&#9776;</button>
+  <div class="brand">
+    <div class="brand-mark">M</div>
+    <span class="tb-brand-txt">Command Center</span>
+  </div>
+  <div class="live-clock" id="clock"><span class="hrs">00</span>:<span class="mins">00</span>:<span class="secs">00</span></div>
+  <div class="tb-date" id="tbDate"></div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="toggleAI()" title="AI Assistant">&#129302;<div class="notif-dot" id="aiDot"></div></button>
+    <button class="tb-btn" title="Notifications">&#128276;<div class="notif-dot on"></div></button>
+    <div class="avatar">M</div>
+  </div>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="nav-group-label">Main</div>
+      <div class="nav-item active" onclick="showPage('home',this)"><span class="nav-ico">&#127968;</span><span class="nav-txt">Home</span></div>
+      <div class="nav-item" onclick="showPage('calendar',this)"><span class="nav-ico">&#128197;</span><span class="nav-txt">Calendar</span></div>
+      <div class="nav-item" onclick="showPage('emails',this)"><span class="nav-ico">&#9993;</span><span class="nav-txt">Emails</span><span class="nav-pill" id="emailBadge">3</span></div>
+      <div class="nav-item" onclick="showPage('reminders',this)"><span class="nav-ico">&#9201;</span><span class="nav-txt">Reminders</span></div>
+      <div class="nav-group-label" style="margin-top:12px;">System</div>
+      <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-ico">&#9881;</span><span class="nav-txt">Settings</span></div>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="collapse-btn" onclick="toggleSidebar()">
+        <span class="nav-ico" id="collapseIco">&#171;</span>
+        <span class="nav-txt">Collapse</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-wrap">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="page-title" id="greeting">Good day, Sir Melvine</div>
+      <div class="page-sub" id="homeDate">Loading date...</div>
+      <div class="bento">
+        <div class="card blue"><div class="card-ico">&#128197;</div><div class="card-val blue" id="statEvents">2</div><div class="card-label">Today's Events</div></div>
+        <div class="card red"><div class="card-ico">&#9993;</div><div class="card-val red" id="statEmails">3</div><div class="card-label">Unread Emails</div></div>
+        <div class="card gold"><div class="card-ico">&#9201;</div><div class="card-val gold" id="statReminders">0</div><div class="card-label">Reminders</div></div>
+        <div class="card green"><div class="card-ico">&#128276;</div><div class="card-val green" id="statNext">9AM</div><div class="card-label">Next Briefing</div></div>
+      </div>
+      <div class="quick-actions">
+        <button class="qa-btn" onclick="showPage('reminders',null)"><span class="ico">&#43;</span> Add Reminder</button>
+        <button class="qa-btn" onclick="showPage('emails',null)"><span class="ico">&#9993;</span> Check Emails</button>
+        <button class="qa-btn" onclick="toggleAI()"><span class="ico">&#129302;</span> Ask Nebula</button>
+        <button class="qa-btn" onclick="showPage('calendar',null)"><span class="ico">&#128197;</span> Calendar</button>
+      </div>
+      <div class="sec-head"><div class="sec-title">&#128197; Week at a Glance</div></div>
+      <div class="week-grid" id="weekGrid"></div>
+    </div>
+
+    <!-- CALENDAR PAGE -->
+    <div class="page" id="page-calendar">
+      <div class="page-title">Calendar</div>
+      <div class="page-sub">Manage your schedule</div>
+      <div class="cal-nav">
+        <button class="cal-arrow" onclick="changeMonth(-1)">&#8249;</button>
+        <div class="cal-month" id="calMonth"></div>
+        <button class="cal-arrow" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="sec-head"><div class="sec-title">&#128197; Upcoming Events</div></div>
+      <div class="upcoming-list">
+        <div class="event-item"><div class="event-dot" style="background:var(--blue)"></div><div class="event-info"><div class="event-title">Daily Morning Briefing</div><div class="event-time">Every day · 9:00 AM EAT</div></div></div>
+        <div class="event-item"><div class="event-dot" style="background:var(--green)"></div><div class="event-info"><div class="event-title">Team Standup</div><div class="event-time">Monday, Wednesday, Friday · 10:00 AM</div></div></div>
+        <div class="event-item"><div class="event-dot" style="background:var(--gold)"></div><div class="event-info"><div class="event-title">Weekly Review</div><div class="event-time">Friday · 4:00 PM</div></div></div>
+      </div>
+    </div>
+
+    <!-- EMAILS PAGE -->
+    <div class="page" id="page-emails">
+      <div class="page-title">Emails</div>
+      <div class="page-sub">Gmail &amp; Zoho Work</div>
+      <div class="email-tabs">
+        <div class="etab active" onclick="switchEmailTab(this,'gmail')">&#128140; Gmail (Personal)</div>
+        <div class="etab" onclick="switchEmailTab(this,'zoho')">&#128188; Zoho (Work)</div>
+      </div>
+      <div id="emailTabContent"></div>
+    </div>
+
+    <!-- REMINDERS PAGE -->
+    <div class="page" id="page-reminders">
+      <div class="page-title">Reminders</div>
+      <div class="page-sub">Stay on top of everything</div>
+      <div class="rem-form">
+        <div class="rem-form-title">&#43; New Reminder</div>
+        <div class="form-row">
+          <input class="form-input" id="remTitle" type="text" placeholder="Reminder title..."/>
+          <input class="form-input" id="remDate" type="datetime-local"/>
+        </div>
+        <div class="form-row">
+          <select class="form-input cat-select" id="remCat">
+            <option value="work">Work</option>
+            <option value="personal">Personal</option>
+            <option value="health">Health</option>
+            <option value="urgent">Urgent</option>
+            <option value="other">Other</option>
+          </select>
+          <button class="save-btn" onclick="addReminder()">Save Reminder</button>
+        </div>
+      </div>
+      <div class="sec-head"><div class="sec-title">&#9201; Your Reminders</div></div>
+      <div class="rem-list" id="remList"></div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div class="page" id="page-settings">
+      <div class="page-title">Settings</div>
+      <div class="page-sub">Preferences &amp; account</div>
+      <div class="settings-card">
+        <div class="settings-title">&#128100; Profile</div>
+        <div class="profile-row"><div class="profile-avatar">M</div><div><div class="profile-name">Sir Melvine</div><div class="profile-email">sirmelvine@gmail.com</div><div class="profile-email">melvin.mwesigwa@unisontalentmanagement.com</div></div></div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-title">&#128276; Notifications</div>
+        <div class="toggle-row"><div><div class="toggle-label">Morning Briefing</div><div class="toggle-sub">Daily email at 9:00 AM EAT</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Reminder Alerts</div><div class="toggle-sub">10 min before each reminder</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Email Notifications</div><div class="toggle-sub">New emails from both accounts</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-title">&#129302; Nebula Assistant</div>
+        <div class="toggle-row"><div><div class="toggle-label">AI Panel</div><div class="toggle-sub">Show assistant panel on desktop</div></div><div class="toggle on" onclick="toggleAI()"></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Voice Input</div><div class="toggle-sub">Use microphone for voice commands</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+    </div>
+
+  </div><!-- end main-wrap -->
+
+  <!-- AI PANEL (desktop) -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="aip-head">
+      <div class="ai-orb">&#129302;</div>
+      <div>
+        <div class="ai-title">Nebula Assistant</div>
+        <div class="ai-status"><div class="ai-dot"></div>Online</div>
+      </div>
+      <button class="aip-close" onclick="toggleAI()">&#10005;</button>
+    </div>
+    <div class="aip-msgs" id="aiMsgs"></div>
+    <div class="aip-input">
+      <textarea class="aip-textarea" id="aiInput" placeholder="Ask Nebula anything..." rows="1" onkeydown="aiKeydown(event)" oninput="autoResize(this)"></textarea>
+      <button class="aip-mic" id="micBtn" onclick="toggleVoice()" title="Voice input">&#127908;</button>
+      <button class="aip-send" onclick="sendAIMsg()" title="Send">&#10148;</button>
+    </div>
+  </div>
+
+</div><!-- end app-body -->
+
+<!-- BOTTOM NAV (mobile) -->
+<div class="bottom-nav" id="bottomNav">
+  <div class="bn-item active" onclick="showPage('home',this,true)"><div class="bn-ico">&#127968;</div><div class="bn-label">Home</div></div>
+  <div class="bn-item" onclick="showPage('calendar',this,true)"><div class="bn-ico">&#128197;</div><div class="bn-label">Calendar</div></div>
+  <div class="bn-item" onclick="showPage('emails',this,true)"><div class="bn-ico">&#9993;</div><div class="bn-label">Emails</div></div>
+  <div class="bn-item" onclick="showPage('reminders',this,true)"><div class="bn-ico">&#9201;</div><div class="bn-label">Reminders</div></div>
+  <div class="bn-item" onclick="showPage('settings',this,true)"><div class="bn-ico">&#9881;</div><div class="bn-label">Settings</div></div>
+</div>
+
+<!-- CHAT FAB (mobile) -->
+<button class="chat-fab" onclick="openMobileAI()">&#129302;</button>
+
+<!-- AI MODAL (mobile) -->
+<div class="ai-modal" id="aiModal" onclick="closeMobileAI(event)">
+  <div class="ai-modal-inner">
+    <div class="aip-head">
+      <div class="ai-orb">&#129302;</div>
+      <div><div class="ai-title">Nebula Assistant</div><div class="ai-status"><div class="ai-dot"></div>Online</div></div>
+      <button class="aip-close" onclick="closeMobileAI()">&#10005;</button>
+    </div>
+    <div class="aip-msgs" id="aiMsgsMobile"></div>
+    <div class="aip-input">
+      <textarea class="aip-textarea" id="aiInputMobile" placeholder="Ask Nebula anything..." rows="1" onkeydown="aiKeydownMobile(event)" oninput="autoResize(this)"></textarea>
+      <button class="aip-mic" id="micBtnMobile" onclick="toggleVoiceMobile()" title="Voice input">&#127908;</button>
+      <button class="aip-send" onclick="sendAIMsgMobile()" title="Send">&#10148;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CLOCK ──
+function updateClock(){
+  const now=new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  const s=String(now.getSeconds()).padStart(2,'0');
+  document.querySelector('#clock .hrs').textContent=h;
+  document.querySelector('#clock .mins').textContent=m;
+  document.querySelector('#clock .secs').textContent=s;
+}
+setInterval(updateClock,1000);updateClock();
+
+// ── DATE ──
+function updateDate(){
+  const now=new Date();
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const d=days[now.getDay()];const mo=months[now.getMonth()];const dt=now.getDate();const yr=now.getFullYear();
+  document.getElementById('tbDate').textContent=`${d}, ${mo} ${dt}`;
+  document.getElementById('homeDate').textContent=`${d}, ${mo} ${dt}, ${yr}`;
+  // greeting
+  const hr=now.getHours();
+  let g='Good evening';if(hr<12)g='Good morning';else if(hr<17)g='Good afternoon';
+  document.getElementById('greeting').textContent=`${g}, Sir Melvine`;
+}
+updateDate();
+
+// ── SIDEBAR ──
+let sidebarCollapsed=false;
+function toggleSidebar(){
+  sidebarCollapsed=!sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed',sidebarCollapsed);
+  document.getElementById('collapseIco').innerHTML=sidebarCollapsed?'&#187;':'&#171;';
+}
+
+// ── PAGES ──
+function showPage(name,el,isMobile){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(!isMobile){
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    if(el)el.classList.add('active');
+  } else {
+    document.querySelectorAll('.bn-item').forEach(i=>i.classList.remove('active'));
+    if(el)el.classList.add('active');
+  }
+  if(name==='reminders')renderReminders();
+  if(name==='emails')renderEmails('gmail');
+  if(name==='calendar')renderCalendar();
+}
+
+// ── REMINDERS ──
+function getReminders(){return JSON.parse(localStorage.getItem('sm_reminders')||'[]');}
+function saveReminders(r){localStorage.setItem('sm_reminders',JSON.stringify(r));}
+function addReminder(){
+  const t=document.getElementById('remTitle').value.trim();
+  const d=document.getElementById('remDate').value;
+  const c=document.getElementById('remCat').value;
+  if(!t){alert('Please enter a title.');return;}
+  const r=getReminders();
+  r.push({id:Date.now(),title:t,datetime:d,category:c});
+  saveReminders(r);
+  document.getElementById('remTitle').value='';
+  document.getElementById('remDate').value='';
+  renderReminders();
+  updateStats();
+  renderWeekGrid();
+}
+function deleteReminder(id){
+  let r=getReminders().filter(x=>x.id!==id);
+  saveReminders(r);renderReminders();updateStats();renderWeekGrid();
+}
+function renderReminders(){
+  const r=getReminders();
+  const el=document.getElementById('remList');
+  if(!r.length){el.innerHTML='<div class="empty"><div class="empty-ico">&#9201;</div><div class="empty-txt">No reminders yet. Add one above.</div></div>';return;}
+  el.innerHTML=r.sort((a,b)=>new Date(a.datetime)-new Date(b.datetime)).map(x=>{
+    const dt=x.datetime?new Date(x.datetime).toLocaleString('en-KE',{dateStyle:'medium',timeStyle:'short'}):'No time set';
+    return `<div class="rem-item"><span class="rem-cat ${x.category}">${x.category}</span><div class="rem-info"><div class="rem-title">${x.title}</div><div class="rem-time">${dt}</div></div><button class="rem-del" onclick="deleteReminder(${x.id})">&#128465;</button></div>`;
+  }).join('');
+}
+
+// ── WEEK GRID ──
+function renderWeekGrid(){
+  const now=new Date();
+  const dow=now.getDay();
+  const monday=new Date(now);monday.setDate(now.getDate()-(dow===0?6:dow-1));
+  const reminders=getReminders();
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const isToday=d.toDateString()===now.toDateString();
+    const dayRems=reminders.filter(r=>{if(!r.datetime)return false;const rd=new Date(r.datetime);return rd.toDateString()===d.toDateString();});
+    html+=`<div class="day-card${isToday?' today':''}">
+      <div class="day-name">${days[i]}</div>
+      <div class="day-num">${d.getDate()}</div>
+      <div class="day-rem">${dayRems.length?dayRems.map(r=>`<div class="day-rem-item">${r.title}</div>`).join(''):'<span style="color:var(--muted);font-size:9px;">Free</span>'}</div>
+    </div>`;
+  }
+  document.getElementById('weekGrid').innerHTML=html;
+}
+renderWeekGrid();
+
+// ── STATS ──
+function updateStats(){
+  const r=getReminders();
+  document.getElementById('statReminders').textContent=r.length;
+}
+updateStats();
+
+// ── CALENDAR ──
+let calDate=new Date();
+function renderCalendar(){
+  const yr=calDate.getFullYear();const mo=calDate.getMonth();
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonth').textContent=`${months[mo]} ${yr}`;
+  const first=new Date(yr,mo,1).getDay();const days=new Date(yr,mo+1,0).getDate();
+  const today=new Date();
+  let html='';
+  const heads=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  heads.forEach(h=>html+=`<div class="cal-head">${h}</div>`);
+  for(let i=0;i<first;i++)html+=`<div></div>`;
+  for(let d=1;d<=days;d++){
+    const isToday=d===today.getDate()&&mo===today.getMonth()&&yr===today.getFullYear();
+    html+=`<div class="cal-cell${isToday?' today':''}">${d}${isToday?'<div class="cal-dot"></div>':''}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+}
+function changeMonth(dir){calDate.setMonth(calDate.getMonth()+dir);renderCalendar();}
+renderCalendar();
+
+// ── EMAILS ──
+const gmailEmails=[
+  {from:'Nebula Assistant',subject:'Your Morning Briefing',preview:'Good morning Sir Melvine! Here is your daily briefing...',time:'9:00 AM',unread:true,color:'#F2A72B'},
+  {from:'Google',subject:'Security alert for your account',preview:'We noticed a new sign-in to your Google Account...',time:'8:32 AM',unread:true,color:'#4B8EFF'},
+  {from:'LinkedIn',subject:'You have 5 new connection requests',preview:'People you may know: John Smith and 4 others...',time:'Yesterday',unread:true,color:'#30D47A'},
+  {from:'GitHub',subject:'[nebula] Pull request merged',preview:'Your pull request has been successfully merged...',time:'Yesterday',unread:false,color:'#9B6EFF'},
+];
+const zohoEmails=[
+  {from:'HR Team',subject:'Leave Request Approved',preview:'Your leave request for March 15-16 has been approved...',time:'10:15 AM',unread:true,color:'#4B8EFF'},
+  {from:'Client · ABC Corp',subject:'Project Update Required',preview:'Hi Melvin, could you please send us the latest project update...',time:'9:45 AM',unread:true,color:'#E8364A'},
+  {from:'Manager',subject:'Weekly Team Meeting',preview:'Reminder: Weekly team meeting tomorrow at 10 AM...',time:'Yesterday',unread:false,color:'#30D47A'},
+];
+function renderEmails(tab){
+  const list=tab==='gmail'?gmailEmails:zohoEmails;
+  document.getElementById('emailTabContent').innerHTML=`<div class="email-list">${list.map(e=>`<div class="email-item${e.unread?' unread':''}"><div class="email-avatar" style="background:${e.color}22;color:${e.color}">${e.from[0]}</div><div class="email-body"><div class="email-from">${e.from}<span class="email-time">${e.time}</span></div><div class="email-subject">${e.subject}</div><div class="email-subject">${e.preview}</div></div></div>`).join('')}</div>`;
+}
+function switchEmailTab(el,tab){document.querySelectorAll('.etab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderEmails(tab);}
+renderEmails('gmail');
+
+// ── AI PANEL ──
+let aiVisible=true;
+const welcomeMsg={role:'bot',text:"Good day, Sir Melvine! I'm your Nebula assistant. How can I help you today? You can type or use your voice &#127908;",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})};
+let desktopMsgs=[welcomeMsg];
+let mobileMsgs=[{...welcomeMsg}];
+
+function renderMsgs(container,msgs){
+  container.innerHTML=msgs.map(m=>`<div class="msg ${m.role}"><div class="msg-bubble">${m.text}</div><div class="msg-time">${m.time}</div></div>`).join('');
+  container.scrollTop=container.scrollHeight;
+}
+renderMsgs(document.getElementById('aiMsgs'),desktopMsgs);
+
+function toggleAI(){
+  aiVisible=!aiVisible;
+  document.getElementById('aiPanel').classList.toggle('hidden',!aiVisible);
+}
+
+// ── NEBULA LIVE AI ──
+const NEBULA_WEBHOOK='https://api.nebula.gg/webhooks/triggers/trig_069aca72e3f4776a8000fa0446ad7837/webhook';
+const NEBULA_SECRET='nh8f3nsWxn7ux4GCOoOmuLxwUZCmtXsP35eB0fciSIY';
+
+async function callNebula(message,history){
+  const payload={message,history:history.slice(-10).map(m=>({role:m.role,text:m.text}))};
+  const resp=await fetch(NEBULA_WEBHOOK,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Webhook-Secret':NEBULA_SECRET},
+    body:JSON.stringify(payload)
+  });
+  if(!resp.ok)throw new Error('HTTP '+resp.status);
+  const data=await resp.json();
+  return data.reply||data.response||data.message||data.output||(typeof data==='string'?data:'...');
+}
+
+function addTypingIndicator(cont){
+  const el=document.createElement('div');el.className='msg bot';el.setAttribute('data-typing','1');
+  el.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  cont.appendChild(el);cont.scrollTop=cont.scrollHeight;return el;
+}
+
+function aiKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsg();}}
+async function sendAIMsg(){
+  const inp=document.getElementById('aiInput');
+  const txt=inp.value.trim();if(!txt)return;
+  const t=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
+  desktopMsgs.push({role:'user',text:txt,time:t});
+  inp.value='';autoResize(inp);inp.disabled=true;
+  const cont=document.getElementById('aiMsgs');
+  renderMsgs(cont,desktopMsgs);
+  const typing=addTypingIndicator(cont);
+  try{
+    const reply=await callNebula(txt,desktopMsgs);
+    typing.remove();
+    desktopMsgs.push({role:'bot',text:reply,time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }catch(err){
+    typing.remove();
+    desktopMsgs.push({role:'bot',text:"I'm having trouble connecting right now, Sir Melvine. Please try again in a moment.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }
+  inp.disabled=false;inp.focus();
+  renderMsgs(cont,desktopMsgs);
+}
+
+// MOBILE AI
+function openMobileAI(){
+  document.getElementById('aiModal').classList.add('open');
+  renderMsgs(document.getElementById('aiMsgsMobile'),mobileMsgs);
+}
+function closeMobileAI(e){
+  if(!e||e.target===document.getElementById('aiModal'))
+    document.getElementById('aiModal').classList.remove('open');
+}
+function aiKeydownMobile(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsgMobile();}}
+async function sendAIMsgMobile(){
+  const inp=document.getElementById('aiInputMobile');
+  const txt=inp.value.trim();if(!txt)return;
+  const t=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
+  mobileMsgs.push({role:'user',text:txt,time:t});
+  inp.value='';autoResize(inp);inp.disabled=true;
+  const cont=document.getElementById('aiMsgsMobile');
+  renderMsgs(cont,mobileMsgs);
+  const typing=addTypingIndicator(cont);
+  try{
+    const reply=await callNebula(txt,mobileMsgs);
+    typing.remove();
+    mobileMsgs.push({role:'bot',text:reply,time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }catch(err){
+    typing.remove();
+    mobileMsgs.push({role:'bot',text:"I'm having trouble connecting right now, Sir Melvine. Please try again in a moment.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
+  }
+  inp.disabled=false;inp.focus();
+  renderMsgs(cont,mobileMsgs);
+}
+
+// VOICE
+let recognition=null;
+function setupRecognition(inputId,micId){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){alert('Voice not supported in this browser. Try Chrome.');return null;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=1;
+  r.onresult=e=>{document.getElementById(inputId).value=e.results[0][0].transcript;document.getElementById(micId).classList.remove('listening');};
+  r.onerror=()=>document.getElementById(micId).classList.remove('listening');
+  r.onend=()=>document.getElementById(micId).classList.remove('listening');
+  return r;
+}
+function toggleVoice(){
+  const mic=document.getElementById('micBtn');
+  if(mic.classList.contains('listening')){if(recognition)recognition.stop();mic.classList.remove('listening');return;}
+  recognition=setupRecognition('aiInput','micBtn');
+  if(recognition){mic.classList.add('listening');recognition.start();}
+}
+function toggleVoiceMobile(){
+  const mic=document.getElementById('micBtnMobile');
+  if(mic.classList.contains('listening')){if(recognition)recognition.stop();mic.classList.remove('listening');return;}
+  recognition=setupRecognition('aiInputMobile','micBtnMobile');
+  if(recognition){mic.classList.add('listening');recognition.start();}
+}
+
+// AUTO RESIZE TEXTAREA
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+
+// SERVICE WORKER
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+</script>
+</body>
+</html>
