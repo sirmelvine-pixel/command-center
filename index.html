@@ -1,1129 +1,663 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
-<meta name="theme-color" content="#07060E"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="Sir Melvine"/>
-<title>Sir Melvine · Command Center</title>
-<link rel="manifest" href="manifest.json"/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sir Melvine | Command Center</title>
 <style>
+* { margin:0; padding:0; box-sizing:border-box; }
 :root {
-  --bg:   #07060E;
-  --s1:   #0B0A16;
-  --s2:   #111020;
-  --s3:   #181628;
-  --s4:   #201E34;
-  --s5:   #2A2844;
-  --b1:   rgba(255,255,255,0.055);
-  --b2:   rgba(255,255,255,0.10);
-  --b3:   rgba(255,255,255,0.17);
-
-  --gold:  #E8A838;
-  --gold2: #F5C86A;
-  --gold3: #FFEAA0;
-  --glow:  rgba(232,168,56,0.13);
-  --glow2: rgba(232,168,56,0.07);
-
-  --red:  #E84A5F;  --red3:  rgba(232,74,95,0.12);
-  --blue: #4F8FFF;  --blue3: rgba(79,143,255,0.12);
-  --grn:  #3DCB82;  --grn3:  rgba(61,203,130,0.12);
-  --pur:  #9B72FF;  --pur3:  rgba(155,114,255,0.12);
-  --rose: #FF7B9C;
-
-  --text:  #ECE8F5;
-  --dim:   #4E4C66;
-  --dim2:  #888099;
-
-  --r:  8px; --r2: 14px; --r3: 20px; --r4: 28px;
-  --sw: 258px; --th: 58px; --ap: 326px;
-
-  --serif: 'Cormorant Garamond', Georgia, serif;
-  --sans:  'DM Sans', sans-serif;
-  --mono:  'JetBrains Mono', monospace;
+  --bg:#0f1117; --surface:#1a1d27; --surface2:#22263a; --border:#2e3248;
+  --accent:#7c6af7; --accent2:#a78bfa; --green:#34d399; --orange:#fb923c;
+  --red:#f87171; --text:#f1f1f5; --muted:#8b8fa8; --radius:16px;
 }
-
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { font-size:16px; }
-body {
-  font-family:var(--sans);
-  background:var(--bg); color:var(--text);
-  height:100dvh; overflow:hidden;
-  display:flex; flex-direction:column;
-}
-button { font-family:var(--sans); cursor:pointer; border:none; outline:none; }
-input,select,textarea { font-family:var(--sans); outline:none; }
-::-webkit-scrollbar { width:3px; }
-::-webkit-scrollbar-thumb { background:var(--s5); border-radius:2px; }
-
-/* ── AMBIENT ── */
-#amb { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-.orb { position:absolute; border-radius:50%; filter:blur(100px); animation:drift 26s ease-in-out infinite; }
-.o1 { width:800px;height:800px;background:var(--gold);top:-300px;right:-200px;opacity:.045;animation-duration:32s; }
-.o2 { width:500px;height:500px;background:var(--pur);bottom:-150px;left:-80px;opacity:.04;animation-duration:20s;animation-delay:-10s; }
-.o3 { width:300px;height:300px;background:var(--blue);top:55%;left:42%;opacity:.03;animation-duration:24s;animation-delay:-6s; }
-@keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-22px) scale(1.04)} 66%{transform:translate(-18px,30px) scale(.97)} }
-
-/* ── TOPBAR ── */
-.topbar {
-  height:var(--th); flex-shrink:0;
-  background:rgba(11,10,22,.93); backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--b1);
-  display:flex; align-items:center;
-  padding:0 18px; gap:12px; position:relative; z-index:200;
-}
-.tb-left { display:flex; align-items:center; gap:9px; width:var(--sw); flex-shrink:0; }
-.menu-btn {
-  width:30px;height:30px;border-radius:var(--r);
-  background:none;color:var(--dim2);font-size:18px;
-  display:flex;align-items:center;justify-content:center;transition:all .2s;
-}
-.menu-btn:hover { background:var(--s4); color:var(--text); }
-.brand { display:flex; align-items:center; gap:9px; }
-.brand-mark {
-  width:28px;height:28px;border-radius:8px;background:var(--gold);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-size:16px;font-weight:700;color:var(--bg);
-}
-.brand-name { font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:.3px; }
-.brand-name em { color:var(--gold); font-style:italic; }
-
-.tb-center { flex:1; display:flex; align-items:center; gap:14px; }
-.tb-clock { font-family:var(--mono); font-size:20px; font-weight:600; letter-spacing:1px; }
-.tb-clock .sep { color:var(--gold); animation:blink 1s step-end infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-.tb-date { font-family:var(--mono); font-size:10px; color:var(--dim2); padding-left:12px; border-left:1px solid var(--b2); }
-
-.tb-right { display:flex; align-items:center; gap:5px; margin-left:auto; }
-.tb-btn {
-  width:30px;height:30px;border-radius:var(--r);
-  background:none;color:var(--dim2);font-size:15px;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .18s;position:relative;
-}
-.tb-btn:hover { background:var(--s4); color:var(--text); }
-.tb-btn.on { color:var(--gold); }
-.pip { position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--red);border:1.5px solid var(--s1); }
-.avatar {
-  width:30px;height:30px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),#7A4000);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-size:14px;font-weight:700;color:var(--bg);
-  cursor:pointer;border:2px solid rgba(232,168,56,.3);transition:border-color .2s;
-}
-.avatar:hover { border-color:var(--gold); }
-
-/* ── LAYOUT ── */
-.app-body { flex:1; display:flex; overflow:hidden; position:relative; z-index:1; }
-
-/* ── SIDEBAR ── */
-.sidebar {
-  width:var(--sw); flex-shrink:0;
-  background:rgba(11,10,22,.93); backdrop-filter:blur(24px);
-  border-right:1px solid var(--b1);
-  display:flex; flex-direction:column; overflow:hidden;
-  transition:width .28s cubic-bezier(.4,0,.2,1);
-}
-.sidebar.slim { width:54px; }
-.sb-scroll { flex:1; overflow-y:auto; overflow-x:hidden; padding:14px 8px; }
-.sb-lbl {
-  font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
-  color:var(--dim);padding:10px 8px 5px;white-space:nowrap;overflow:hidden;transition:opacity .2s;
-}
-.sidebar.slim .sb-lbl { opacity:0; }
-.nav-item {
-  display:flex;align-items:center;gap:10px;padding:9px 8px;
-  border-radius:var(--r2);color:var(--dim2);font-size:13px;font-weight:500;
-  cursor:pointer;transition:all .15s;margin-bottom:2px;
-  white-space:nowrap;overflow:hidden;position:relative;
-}
-.nav-item:hover { background:var(--s4); color:var(--text); }
-.nav-item.on { background:var(--glow2); color:var(--gold); font-weight:600; }
-.nav-item.on::before { content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:0 2px 2px 0;background:var(--gold); }
-.ni { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
-.nt { overflow:hidden; transition:opacity .2s,width .28s; }
-.sidebar.slim .nt { opacity:0; width:0; }
-.nb { margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;flex-shrink:0;transition:opacity .2s; }
-.sidebar.slim .nb { opacity:0; }
-.sb-foot { padding:8px; border-top:1px solid var(--b1); flex-shrink:0; }
-.collapse-btn {
-  display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:var(--r2);
-  background:none;width:100%;color:var(--dim2);font-size:13px;font-weight:500;
-  transition:all .15s;white-space:nowrap;overflow:hidden;
-}
-.collapse-btn:hover { background:var(--s4); color:var(--text); }
-.sidebar.slim .collapse-btn .nt { opacity:0; width:0; }
-
-/* ── MAIN ── */
-.main-wrap { flex:1; overflow-y:auto; }
-.page { display:none; padding:28px 30px; }
-.page.on { display:block; animation:pgIn .22s ease; }
-@keyframes pgIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
-
-/* ── AI PANEL ── */
-.ai-panel {
-  width:var(--ap); flex-shrink:0;
-  background:rgba(11,10,22,.96); backdrop-filter:blur(24px);
-  border-left:1px solid var(--b1);
-  display:flex; flex-direction:column;
-  transition:width .28s cubic-bezier(.4,0,.2,1); overflow:hidden;
-}
-.ai-panel.gone { width:0; }
-.aip-head {
-  padding:14px 16px 12px; flex-shrink:0;
-  border-bottom:1px solid var(--b1);
-  display:flex; align-items:center; gap:10px;
-}
-.nebula-orb {
-  width:32px;height:32px;border-radius:50%;flex-shrink:0;
-  background:conic-gradient(from 0deg,var(--gold),var(--pur),var(--blue),var(--gold));
-  display:flex;align-items:center;justify-content:center;
-  position:relative;animation:spin 8s linear infinite;
-}
-.nebula-orb::after { content:'✦';position:absolute;font-size:13px;color:#fff; }
-@keyframes spin { to{filter:hue-rotate(360deg)} }
-.aip-info { flex:1; min-width:0; }
-.aip-name { font-family:var(--serif); font-size:15px; font-weight:600; letter-spacing:.3px; }
-.aip-live { font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--grn);display:flex;align-items:center;gap:4px;margin-top:1px; }
-.live-dot { width:5px;height:5px;border-radius:50%;background:var(--grn);animation:pulse-g 2.5s ease-in-out infinite; }
-@keyframes pulse-g { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(61,203,130,.4)} 50%{opacity:.5;box-shadow:0 0 0 5px rgba(61,203,130,0)} }
-.aip-rst { width:26px;height:26px;border-radius:var(--r);background:none;color:var(--dim);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s; }
-.aip-rst:hover { background:var(--s4); color:var(--text); }
-
-.aip-msgs { flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px; }
-.msg { max-width:88%; animation:mPop .2s ease both; }
-@keyframes mPop { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
-.msg.u { align-self:flex-end; }
-.msg.a { align-self:flex-start; }
-.mb { padding:9px 13px;border-radius:var(--r3);font-size:12.5px;line-height:1.65; }
-.msg.u .mb { background:var(--gold);color:var(--bg);font-weight:500;border-radius:var(--r3) var(--r3) 4px var(--r3); }
-.msg.a .mb { background:var(--s4);border:1px solid var(--b2);border-radius:4px var(--r3) var(--r3) var(--r3); }
-.thinking { display:flex;gap:5px;align-items:center;padding:11px 14px;background:var(--s4);border:1px solid var(--b2);border-radius:4px var(--r3) var(--r3) var(--r3);align-self:flex-start;animation:mPop .2s ease both; }
-.td { width:5px;height:5px;border-radius:50%;background:var(--dim2);animation:tda 1.1s ease-in-out infinite; }
-.td:nth-child(2){animation-delay:.17s}.td:nth-child(3){animation-delay:.34s}
-@keyframes tda { 0%,80%,100%{transform:translateY(0);opacity:.35} 40%{transform:translateY(-5px);opacity:1} }
-
-.chips { display:flex;flex-direction:column;gap:5px;margin-top:2px; }
-.chip { background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:7px 12px;font-size:11.5px;color:var(--dim2);text-align:left;cursor:pointer;transition:all .15s; }
-.chip:hover { background:var(--glow2);border-color:var(--glow);color:var(--text); }
-
-.aip-input-wrap { padding:10px 12px 12px;border-top:1px solid var(--b1);flex-shrink:0; }
-.aip-row { display:flex;gap:7px;align-items:flex-end; }
-.aip-ta { flex:1;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r2);color:var(--text);font-size:12.5px;padding:9px 12px;resize:none;min-height:36px;max-height:90px;line-height:1.5;transition:border-color .2s; }
-.aip-ta:focus { border-color:var(--gold); }
-.aip-ta::placeholder { color:var(--dim); }
-.send-btn { width:36px;height:36px;flex-shrink:0;border-radius:var(--r2);background:var(--gold);color:var(--bg);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s; }
-.send-btn:hover { background:var(--gold2); transform:translateY(-1px); }
-
-/* ── PAGE HEAD ── */
-.pg-head { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;gap:16px;flex-wrap:wrap; }
-.pg-h1 { font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:-.2px;line-height:1.2; }
-.pg-h1 em { color:var(--gold);font-style:italic; }
-.pg-sub { font-size:12px;color:var(--dim2);margin-top:4px; }
-.pg-acts { display:flex;gap:8px;flex-wrap:wrap;align-items:center; }
-.btn-gold { background:var(--gold);color:var(--bg);padding:9px 22px;border-radius:var(--r2);font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(232,168,56,.22);transition:all .15s; }
-.btn-gold:hover { background:var(--gold2);transform:translateY(-1px); }
-.btn-ghost { background:none;border:1px solid var(--b2);color:var(--dim2);padding:9px 18px;border-radius:var(--r2);font-size:13px;font-weight:500;transition:all .2s; }
-.btn-ghost:hover { border-color:var(--b3);color:var(--text); }
-
-/* ── CARDS ── */
-.card { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r3);padding:20px 22px;transition:border-color .2s,transform .2s;position:relative;overflow:hidden; }
-.card.click { cursor:pointer; }
-.card.click:hover { border-color:var(--b2);transform:translateY(-2px); }
-.card.click::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ca,var(--gold));transform:scaleX(0);transition:transform .25s;transform-origin:left; }
-.card.click:hover::after { transform:scaleX(1); }
-
-/* stat */
-.stat-ico { width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px;background:var(--ib,var(--glow2)); }
-.stat-n { font-family:var(--mono);font-size:38px;font-weight:600;line-height:1;letter-spacing:-1px;margin-bottom:5px;color:var(--ca,var(--gold)); }
-.stat-l { font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim2); }
-
-/* section head */
-.sec-h { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
-.sec-h h3 { font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.6px;color:var(--dim2);display:flex;align-items:center;gap:8px; }
-.sec-h h3::before { content:'';width:3px;height:12px;background:var(--gold);border-radius:2px; }
-.sec-btn { font-size:11px;font-weight:600;color:var(--gold);background:none;transition:opacity .2s;cursor:pointer; }
-.sec-btn:hover { opacity:.7; }
-
-/* grids */
-.g4 { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px; }
-.g2 { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px; }
-.g3 { display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:18px; }
-
-/* ── BIBLE VERSE CARD ── */
-.bible-card {
-  background:linear-gradient(135deg,rgba(232,168,56,.07),rgba(155,114,255,.05));
-  border-color:rgba(232,168,56,.2);
-  margin-bottom:18px;
-}
-.bible-inner { display:flex;gap:16px;align-items:flex-start; }
-.bible-cross { font-size:28px;flex-shrink:0;opacity:.7; }
-.bible-body { flex:1;min-width:0; }
-.bible-label { font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:8px; }
-.bible-verse {
-  font-family:var(--serif);font-size:17px;font-weight:400;font-style:italic;
-  line-height:1.7;color:var(--text);margin-bottom:8px;
-}
-.bible-ref { font-family:var(--serif);font-size:13px;font-weight:600;color:var(--gold); }
-.bible-loading { font-size:13px;color:var(--dim2);font-style:italic; }
-.bible-refresh { background:none;color:var(--dim);font-size:13px;cursor:pointer;transition:color .2s;margin-left:auto;flex-shrink:0; }
-.bible-refresh:hover { color:var(--gold); }
-
-/* ── AI SUMMARY CARD ── */
-.summary-card {
-  background:linear-gradient(135deg,rgba(79,143,255,.06),rgba(61,203,130,.04));
-  border-color:rgba(79,143,255,.18);
-  margin-bottom:18px;
-}
-.sum-head { display:flex;align-items:center;gap:10px;margin-bottom:12px; }
-.sum-orb { width:28px;height:28px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),var(--pur),var(--blue),var(--gold));display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;animation:spin 8s linear infinite; }
-.sum-title { font-family:var(--serif);font-size:15px;font-weight:600;flex:1; }
-.sum-badge { font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;background:var(--grn3);color:var(--grn);padding:3px 10px;border-radius:20px; }
-.sum-text { font-size:13px;line-height:1.75;color:var(--dim2); }
-.sum-text strong { color:var(--text);font-weight:600; }
-.sum-regen { display:flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;font-weight:600;color:var(--gold);background:none;cursor:pointer;transition:opacity .2s; }
-.sum-regen:hover { opacity:.7; }
-
-/* ── WEEKLY SUMMARY ── */
-.week-sum-card { background:linear-gradient(135deg,rgba(155,114,255,.06),rgba(232,168,56,.04));border-color:rgba(155,114,255,.18);margin-bottom:18px; }
-.ws-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
-.ws-title { font-family:var(--serif);font-size:15px;font-weight:600; }
-.ws-range { font-size:10px;color:var(--dim2);font-family:var(--mono); }
-.ws-body { font-size:13px;line-height:1.8;color:var(--dim2); }
-.ws-body strong { color:var(--text); }
-.ws-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px; }
-.ws-stat { background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:10px;text-align:center; }
-.ws-stat-n { font-family:var(--mono);font-size:22px;font-weight:600;color:var(--gold); }
-.ws-stat-l { font-size:9px;color:var(--dim2);text-transform:uppercase;letter-spacing:1px;margin-top:3px; }
-
-/* ── WEEK GRID ── */
-.week-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px; }
-.day-col { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 8px;min-height:90px; }
-.day-col.today { border-color:rgba(232,168,56,.35);background:linear-gradient(180deg,var(--s1),var(--glow2)); }
-.day-head { text-align:center;margin-bottom:8px; }
-.day-dn { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim2);margin-bottom:3px; }
-.day-col.today .day-dn { color:var(--gold); }
-.day-num { font-family:var(--mono);font-size:16px;font-weight:600;line-height:1; }
-.day-col.today .day-num { color:var(--gold); }
-.day-items { display:flex;flex-direction:column;gap:3px; }
-.dchip { font-size:9px;background:var(--s4);border-radius:4px;padding:2px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.45; }
-.dmore { font-size:9px;background:var(--glow2);color:var(--gold);border-radius:4px;padding:2px 5px;text-align:center; }
-.dfree { font-size:10px;color:var(--dim);text-align:center;padding-top:4px; }
-
-/* ── SCHEDULE ITEMS ── */
-.sched-item { display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);margin-bottom:7px;transition:border-color .15s; }
-.sched-item:hover { border-color:var(--b2); }
-.si-time { font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:500;min-width:42px; }
-.si-bar { width:3px;height:26px;border-radius:2px;flex-shrink:0; }
-.si-body { flex:1; }
-.si-t { font-size:13px;font-weight:500; }
-.si-n { font-size:11px;color:var(--dim);margin-top:2px; }
-.badge { font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0; }
-.bp { background:var(--red3);color:var(--red); }
-.bw { background:var(--blue3);color:var(--blue); }
-.bu { background:var(--glow2);color:var(--gold); }
-.bh { background:var(--grn3);color:var(--grn); }
-
-/* ── REMINDERS ── */
-.rem-item { display:flex;align-items:flex-start;gap:11px;padding:11px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);margin-bottom:7px;transition:border-color .15s; }
-.rem-item:hover { border-color:var(--b2); }
-.rem-cb { width:16px;height:16px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;cursor:pointer; }
-.rem-body { flex:1;min-width:0; }
-.rem-t { font-size:13px;font-weight:500; }
-.rem-t.done { text-decoration:line-through;color:var(--dim); }
-.rem-m { font-size:11px;color:var(--dim);margin-top:2px; }
-.rem-del { background:none;color:var(--dim);font-size:13px;padding:2px;border-radius:5px;flex-shrink:0;transition:color .15s;margin-top:1px; }
-.rem-del:hover { color:var(--red); }
-
-/* ── FORM ── */
-.form-card { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r3);padding:22px;margin-bottom:22px; }
-.form-title { font-family:var(--serif);font-size:15px;font-weight:600;color:var(--gold);margin-bottom:14px; }
-.frow { display:grid;gap:10px;margin-bottom:10px; }
-.f1{grid-template-columns:1fr} .f2{grid-template-columns:1fr 1fr} .f3{grid-template-columns:2fr 1fr 1fr}
-.fi { background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);color:var(--text);font-size:13px;padding:10px 14px;width:100%;transition:border-color .2s; }
-.fi:focus { border-color:var(--gold); }
-.fi::placeholder { color:var(--dim); }
-select.fi option { background:var(--bg); }
-.form-btns { display:flex;gap:8px;margin-top:4px; }
-.btn-sm { padding:9px 18px;border-radius:var(--r2);font-size:12.5px;font-weight:600; }
-.btn-s2 { background:var(--s4);color:var(--dim2);border:1px solid var(--b1); }
-
-/* ── CALENDAR ── */
-.cal-wrap { display:grid;grid-template-columns:1fr 1.1fr;gap:16px; }
-.cal-nav { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
-.cal-lbl { font-family:var(--serif);font-size:18px;font-weight:600; }
-.cal-arr { width:30px;height:30px;border-radius:var(--r);background:var(--s4);border:1px solid var(--b2);color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s; }
-.cal-arr:hover { border-color:var(--gold); }
-.cal-g { display:grid;grid-template-columns:repeat(7,1fr);gap:3px; }
-.cal-hd { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);text-align:center;padding:5px 0; }
-.cal-d { aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:var(--r);cursor:pointer;transition:background .12s;position:relative; }
-.cal-d:hover { background:var(--s4); }
-.cal-d.today { background:var(--gold);color:var(--bg);font-weight:700; }
-.cal-d.sel:not(.today) { border:1.5px solid var(--gold); }
-.cal-d.has::after { content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--blue); }
-.cal-d.dim { color:var(--dim);opacity:.3; }
-
-/* ── EMAIL ── */
-.email-card { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r3);padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:10px;transition:border-color .2s; }
-.email-card:hover { border-color:var(--b2); }
-.email-ico { width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:18px;font-weight:700;flex-shrink:0; }
-.email-info { flex:1; }
-.email-n { font-size:14px;font-weight:600; }
-.email-a { font-size:11px;color:var(--dim);margin-top:2px; }
-.pip-wrap { display:flex;align-items:center;gap:6px; }
-.epip { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
-.epip.on { background:var(--grn);box-shadow:0 0 8px rgba(61,203,130,.5); }
-.epip.off { background:var(--rose); }
-.epip-lbl { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px; }
-.epip-lbl.on { color:var(--grn); }
-.epip-lbl.off { color:var(--rose); }
-
-/* ── SETTINGS ── */
-.sets-g { margin-bottom:26px; }
-.sets-g-title { font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:10px; }
-.tog-row { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;transition:border-color .15s;cursor:pointer; }
-.tog-row:hover { border-color:var(--b2); }
-.tog-l { font-size:13px;font-weight:500;margin-bottom:2px; }
-.tog-s { font-size:11px;color:var(--dim); }
-.tsw { position:relative;width:42px;height:22px;flex-shrink:0; }
-.tsw input { display:none; }
-.tsl { position:absolute;inset:0;background:var(--s5);border-radius:22px;cursor:pointer;transition:background .25s; }
-.tsl::before { content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .25s; }
-.tsw input:checked+.tsl { background:var(--gold); }
-.tsw input:checked+.tsl::before { transform:translateX(20px); }
-
-/* ── EMPTY ── */
-.empty { text-align:center;padding:36px 16px;color:var(--dim);font-size:13px; }
-.empty-ico { font-size:32px;margin-bottom:10px;opacity:.4; }
-
-/* ── TOAST ── */
-.toast { position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--s4);border:1px solid var(--b2);border-radius:var(--r3);padding:10px 20px;font-size:13px;font-weight:500;box-shadow:0 8px 40px rgba(0,0,0,.5);z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap; }
-.toast.show { opacity:1; }
-
-/* ── MOBILE ── */
-.mob-fab { display:none;position:fixed;bottom:72px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--bg);font-size:20px;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(232,168,56,.45);z-index:300;transition:transform .2s; }
-.mob-fab:hover { transform:scale(1.06); }
-.bot-nav { display:none;height:58px;flex-shrink:0;background:rgba(11,10,22,.96);backdrop-filter:blur(24px);border-top:1px solid var(--b1);align-items:center;justify-content:space-around;padding:0 8px;z-index:200; }
-.bn-item { display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border-radius:var(--r);color:var(--dim2);cursor:pointer;transition:color .2s;min-width:52px; }
-.bn-item.on { color:var(--gold); }
-.bn-ico { font-size:20px; }
-.bn-lbl { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px; }
-
-/* ── RESPONSIVE ── */
-@media(max-width:1280px){:root{--ap:288px} .g4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:1024px){.ai-panel{display:none} .mob-fab{display:flex} .week-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:768px){
-  .sidebar{display:none} .bot-nav{display:flex}
-  .page{padding:16px}
-  .g2,.g3,.cal-wrap{grid-template-columns:1fr}
-  .f3{grid-template-columns:1fr 1fr}
-  .week-grid{grid-template-columns:repeat(3,1fr)}
-  .tb-date{display:none} .brand-name{display:none}
-  :root{--sw:0px}
-}
-@media(max-width:480px){.g4{grid-template-columns:1fr 1fr} .week-grid{grid-template-columns:repeat(3,1fr)}}
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:100; }
+.nav-logo { font-size:18px; font-weight:700; color:var(--accent2); }
+.nav-logo span { color:var(--text); }
+.nav-tabs { display:flex; gap:4px; }
+.nav-tab { background:none; border:none; color:var(--muted); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:500; transition:all 0.2s; }
+.nav-tab.active,.nav-tab:hover { background:var(--surface2); color:var(--text); }
+.nav-tab.active { color:var(--accent2); }
+.nav-right { display:flex; align-items:center; gap:12px; }
+.avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+.btn { padding:9px 18px; border-radius:10px; font-size:13px; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent2); }
+.btn-outline { background:none; border:1px solid var(--border); color:var(--text); }
+.btn-outline:hover { background:var(--surface2); }
+.app { display:flex; flex:1; overflow:hidden; height:calc(100vh - 60px); }
+.sidebar { width:280px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow-y:auto; flex-shrink:0; }
+.sidebar-section { padding:20px; border-bottom:1px solid var(--border); }
+.sidebar-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.cal-header h3 { font-size:15px; font-weight:600; }
+.cal-nav { background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; padding:4px 8px; border-radius:6px; }
+.cal-nav:hover { background:var(--surface2); color:var(--text); }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; }
+.cal-day-name { font-size:11px; color:var(--muted); padding:4px 0; font-weight:600; }
+.cal-day { font-size:13px; padding:6px 4px; border-radius:8px; cursor:pointer; transition:all 0.15s; }
+.cal-day:hover { background:var(--surface2); }
+.cal-day.today { background:var(--accent); color:#fff; font-weight:700; }
+.cal-day.has-event::after { content:''; display:block; width:4px; height:4px; background:var(--accent2); border-radius:50%; margin:2px auto 0; }
+.cal-day.other-month { color:var(--border); }
+.event-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+.event-item:last-child { border-bottom:none; }
+.event-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.event-title { font-size:13px; font-weight:500; }
+.event-time { font-size:11px; color:var(--muted); margin-top:2px; }
+.main { flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px; }
+.page { display:none; flex-direction:column; gap:20px; }
+.page.active { display:flex; }
+.greeting-bar { background:linear-gradient(135deg,#2d2060 0%,#1a1d27 60%); border:1px solid var(--border); border-radius:var(--radius); padding:24px 28px; display:flex; align-items:center; justify-content:space-between; }
+.greeting-text h1 { font-size:24px; font-weight:700; margin-bottom:4px; }
+.greeting-text p { color:var(--muted); font-size:14px; }
+.greeting-actions { display:flex; gap:10px; }
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; }
+.stat-icon { font-size:22px; margin-bottom:10px; }
+.stat-value { font-size:28px; font-weight:700; line-height:1; }
+.stat-label { font-size:12px; color:var(--muted); margin-top:4px; }
+.stat-card.accent { border-color:var(--accent); background:linear-gradient(135deg,#2d2060 0%,var(--surface) 80%); }
+.panels-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.panel-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.panel-title { font-size:15px; font-weight:600; }
+.panel-body { padding:16px 20px; }
+.panel-btn { background:var(--accent); border:none; color:#fff; border-radius:8px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer; }
+.panel-btn:hover { background:var(--accent2); }
+.timeline { display:flex; flex-direction:column; gap:8px; }
+.tl-item { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; }
+.tl-time { font-size:11px; color:var(--muted); width:44px; flex-shrink:0; padding-top:4px; text-align:right; }
+.tl-card { flex:1; background:var(--surface2); border-radius:10px; padding:10px 14px; border-left:3px solid var(--accent); }
+.tl-card.green { border-left-color:var(--green); }
+.tl-card.orange { border-left-color:var(--orange); }
+.tl-card.red { border-left-color:var(--red); }
+.tl-card-title { font-size:13px; font-weight:600; }
+.tl-card-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+.reminder-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+.reminder-item:last-child { border-bottom:none; }
+.reminder-check { width:18px; height:18px; border-radius:50%; border:2px solid var(--border); cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+.reminder-check.done { background:var(--green); border-color:var(--green); }
+.reminder-check.done::after { content:'checkmark'; font-size:10px; color:#fff; font-weight:700; }
+.reminder-text { flex:1; font-size:13px; }
+.reminder-text.done { text-decoration:line-through; color:var(--muted); }
+.reminder-due { font-size:11px; color:var(--muted); }
+.reminder-priority { font-size:10px; padding:2px 8px; border-radius:20px; font-weight:600; }
+.p-high { background:rgba(248,113,113,0.15); color:var(--red); }
+.p-med { background:rgba(251,146,60,0.15); color:var(--orange); }
+.p-low { background:rgba(52,211,153,0.15); color:var(--green); }
+.right-panel { width:320px; background:var(--surface); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.chat-header { padding:16px 20px; border-bottom:1px solid var(--border); }
+.chat-header h3 { font-size:15px; font-weight:600; }
+.chat-header p { font-size:12px; color:var(--muted); margin-top:2px; }
+.chat-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.msg { max-width:85%; }
+.msg-ai { align-self:flex-start; }
+.msg-user { align-self:flex-end; }
+.msg-bubble { padding:10px 14px; border-radius:14px; font-size:13px; line-height:1.5; }
+.msg-ai .msg-bubble { background:var(--surface2); color:var(--text); border-bottom-left-radius:4px; }
+.msg-user .msg-bubble { background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
+.msg-time { font-size:10px; color:var(--muted); margin-top:4px; }
+.msg-ai .msg-time { text-align:left; }
+.msg-user .msg-time { text-align:right; }
+.chat-input-area { padding:16px; border-top:1px solid var(--border); }
+.chat-input-row { display:flex; gap:8px; }
+.chat-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-size:13px; outline:none; resize:none; font-family:inherit; }
+.chat-input:focus { border-color:var(--accent); }
+.chat-send { background:var(--accent); border:none; color:#fff; border-radius:10px; width:40px; height:40px; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.chat-send:hover { background:var(--accent2); }
+.chat-suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.suggestion-chip { background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:11px; padding:5px 10px; border-radius:20px; cursor:pointer; transition:all 0.15s; }
+.suggestion-chip:hover { border-color:var(--accent); color:var(--accent2); }
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; width:480px; max-width:95vw; position:relative; }
+.modal h2 { font-size:18px; font-weight:700; margin-bottom:20px; }
+.form-group { margin-bottom:16px; }
+.form-label { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; display:block; }
+.form-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-size:14px; outline:none; font-family:inherit; }
+.form-input:focus { border-color:var(--accent); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-size:14px; outline:none; cursor:pointer; }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:24px; }
+.modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
+.modal-close:hover { background:var(--surface2); color:var(--text); }
+.toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--accent); border-radius:12px; padding:14px 20px; font-size:13px; font-weight:500; z-index:300; opacity:0; transform:translateY(10px); transition:all 0.3s; pointer-events:none; }
+.toast.show { opacity:1; transform:translateY(0); }
+.week-grid { display:grid; grid-template-columns:60px repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
+.week-cell { background:var(--surface); padding:8px; min-height:50px; }
+.week-header { background:var(--surface2); padding:10px 8px; text-align:center; font-size:12px; font-weight:600; min-height:auto; }
+.week-header.today-col { color:var(--accent2); }
+.week-time { background:var(--surface2); padding:8px; font-size:11px; color:var(--muted); text-align:right; }
+.week-event { background:var(--accent); color:#fff; border-radius:6px; padding:4px 6px; font-size:11px; font-weight:500; margin-bottom:2px; cursor:pointer; }
+.week-event.green { background:var(--green); color:#0f1117; }
+.week-event.orange { background:var(--orange); color:#0f1117; }
+.week-event.red { background:var(--red); color:#0f1117; }
+.delete-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; padding:0 4px; }
+.delete-btn:hover { color:var(--red); }
+@media (max-width:1100px) { .stats-row { grid-template-columns:repeat(2,1fr); } .right-panel { display:none; } .sidebar { width:240px; } }
+@media (max-width:768px) { .sidebar { display:none; } .panels-row { grid-template-columns:1fr; } .stats-row { grid-template-columns:repeat(2,1fr); } .greeting-actions { display:none; } }
 </style>
 </head>
 <body>
 
-<div id="amb"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+<nav>
+  <div class="nav-logo">&#9670; <span>Sir Melvine</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('calendar',this)">Calendar</button>
+    <button class="nav-tab" onclick="showPage('reminders',this)">Reminders</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-primary" onclick="openModal('event-modal')">+ Add Event</button>
+    <div class="avatar">SM</div>
+  </div>
+</nav>
 
-<!-- ══ TOPBAR ══ -->
-<div class="topbar">
-  <div class="tb-left">
-    <button class="menu-btn" onclick="toggleSB()">☰</button>
-    <div class="brand">
-      <div class="brand-mark">M</div>
-      <div class="brand-name">Sir <em>Melvine</em></div>
-    </div>
-  </div>
-  <div class="tb-center">
-    <div class="tb-clock"><span id="ch">00</span><span class="sep">:</span><span id="cm">00</span><span class="sep">:</span><span id="cs">00</span></div>
-    <div class="tb-date" id="tbDate"></div>
-  </div>
-  <div class="tb-right">
-    <button class="tb-btn on" id="aiBtn" onclick="toggleAI()">✦<div class="pip"></div></button>
-    <button class="tb-btn" id="bellBtn" onclick="reqNotif()">🔔</button>
-    <div class="avatar">M</div>
-  </div>
-</div>
-
-<!-- ══ APP ══ -->
-<div class="app-body">
+<div class="app">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sb-scroll">
-      <div class="sb-lbl">Overview</div>
-      <div class="nav-item on" id="nav-home" onclick="go('home')"><span class="ni">⬛</span><span class="nt">Dashboard</span></div>
-      <div class="nav-item" id="nav-calendar" onclick="go('calendar')"><span class="ni">📅</span><span class="nt">Calendar</span></div>
-      <div class="sb-lbl" style="margin-top:8px">Tasks</div>
-      <div class="nav-item" id="nav-reminders" onclick="go('reminders')"><span class="ni">✔</span><span class="nt">Reminders</span><span class="nb" id="remBadge" style="display:none">0</span></div>
-      <div class="sb-lbl" style="margin-top:8px">Communication</div>
-      <div class="nav-item" id="nav-emails" onclick="go('emails')"><span class="ni">✉</span><span class="nt">Emails</span></div>
-      <div class="sb-lbl" style="margin-top:8px">System</div>
-      <div class="nav-item" id="nav-settings" onclick="go('settings')"><span class="ni">⚙</span><span class="nt">Settings</span></div>
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Calendar</div>
+      <div class="cal-header">
+        <button class="cal-nav" onclick="prevMonth()">&#8249;</button>
+        <h3 id="cal-month-label"></h3>
+        <button class="cal-nav" onclick="nextMonth()">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
     </div>
-    <div class="sb-foot">
-      <button class="collapse-btn" onclick="toggleSB()"><span class="ni">◀</span><span class="nt">Collapse</span></button>
+    <div class="sidebar-section" style="flex:1;overflow-y:auto;">
+      <div class="sidebar-label">Upcoming</div>
+      <div id="upcoming-list"></div>
     </div>
   </aside>
 
   <!-- MAIN -->
-  <div class="main-wrap">
+  <main class="main">
 
-    <!-- ── DASHBOARD ── -->
-    <div class="page on" id="page-home">
-      <div class="pg-head">
-        <div>
-          <div class="pg-h1">Good <em id="greeting">Morning</em>, Sir Melvine 👑</div>
-          <div class="pg-sub" id="fullDate"></div>
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="greeting-bar">
+        <div class="greeting-text">
+          <h1 id="greeting-text">Good morning, Sir Melvine</h1>
+          <p id="greeting-date"></p>
         </div>
-        <div class="pg-acts">
-          <button class="btn-gold" onclick="go('reminders')">+ Add Reminder</button>
-          <button class="btn-ghost" onclick="go('calendar')">Calendar</button>
+        <div class="greeting-actions">
+          <button class="btn btn-outline" onclick="openModal('reminder-modal')">+ Reminder</button>
+          <button class="btn btn-primary" onclick="openModal('event-modal')">+ Event</button>
         </div>
       </div>
-
-      <!-- HERO BANNER -->
-      <div style="position:relative;border-radius:var(--r3);overflow:hidden;margin-bottom:18px;min-height:220px;background:#0a0812;">
-        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80&auto=format&fit=crop"
-          onerror="this.src='https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1400&q=80&auto=format&fit=crop'"
-          alt="Sunset" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:.65;display:block;"/>
-        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(7,6,14,.85) 0%,rgba(7,6,14,.3) 60%,transparent 100%);"></div>
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(7,6,14,.7) 0%,transparent 50%);"></div>
-        <div style="position:relative;z-index:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:flex-end;min-height:220px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:18px">🌅</span>
-            <span style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)" id="heroBriefLabel">Good Morning</span>
+      <div class="stats-row">
+        <div class="stat-card accent">
+          <div class="stat-icon">&#128197;</div>
+          <div class="stat-value" id="stat-events">0</div>
+          <div class="stat-label">Today's Events</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#128276;</div>
+          <div class="stat-value" id="stat-reminders">0</div>
+          <div class="stat-label">Active Reminders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#9989;</div>
+          <div class="stat-value" id="stat-done">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#128336;</div>
+          <div class="stat-value" id="stat-next">--</div>
+          <div class="stat-label">Next Event</div>
+        </div>
+      </div>
+      <div class="panels-row">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Today's Schedule</span>
+            <button class="panel-btn" onclick="openModal('event-modal')">+ Add</button>
           </div>
-          <div style="font-family:var(--serif);font-size:38px;font-weight:600;line-height:1.1;letter-spacing:-.5px;margin-bottom:6px" id="heroDate">Monday, March 9, 2026</div>
-          <div style="font-size:13px;color:rgba(236,232,245,.65)" id="heroSub">Loading your day…</div>
-        </div>
-      </div>
-
-      <!-- BIBLE VERSE -->
-      <div class="card bible-card">
-        <div class="bible-inner">
-          <div class="bible-cross">✝️</div>
-          <div class="bible-body">
-            <div class="bible-label">Verse of the Day</div>
-            <div class="bible-verse" id="bibleVerse"><span class="bible-loading">Loading today's verse…</span></div>
-            <div class="bible-ref" id="bibleRef"></div>
+          <div class="panel-body">
+            <div class="timeline" id="today-timeline"></div>
           </div>
-          <button class="bible-refresh" onclick="loadBibleVerse()" title="New verse">↺</button>
         </div>
-      </div>
-
-      <!-- STAT CARDS -->
-      <div class="g4">
-        <div class="card click" style="--ca:var(--gold);--ib:var(--glow2)" onclick="go('reminders')">
-          <div class="stat-ico">📋</div><div class="stat-n" id="stToday">0</div><div class="stat-l">Due Today</div>
-        </div>
-        <div class="card click" style="--ca:var(--grn);--ib:var(--grn3)" onclick="go('reminders')">
-          <div class="stat-ico">✅</div><div class="stat-n" id="stDone">0</div><div class="stat-l">Completed</div>
-        </div>
-        <div class="card click" style="--ca:var(--blue);--ib:var(--blue3)" onclick="go('calendar')">
-          <div class="stat-ico">📅</div><div class="stat-n" id="stWeek">0</div><div class="stat-l">This Week</div>
-        </div>
-        <div class="card click" style="--ca:var(--pur);--ib:var(--pur3)" onclick="go('reminders')">
-          <div class="stat-ico">🗂</div><div class="stat-n" id="stTotal">0</div><div class="stat-l">All Reminders</div>
-        </div>
-      </div>
-
-      <!-- AI DAILY SUMMARY -->
-      <div class="card summary-card">
-        <div class="sum-head">
-          <div class="sum-orb"></div>
-          <div class="sum-title">Today's AI Briefing</div>
-          <span class="sum-badge" id="sumBadge">Live</span>
-        </div>
-        <div class="sum-text" id="sumText"><span style="color:var(--dim);font-style:italic">Generating your briefing…</span></div>
-        <button class="sum-regen" onclick="genDailySummary()">↺ Regenerate</button>
-      </div>
-
-      <!-- WEEK AT A GLANCE -->
-      <div class="sec-h"><h3>Week at a Glance</h3><button class="sec-btn" onclick="go('calendar')">Full Calendar →</button></div>
-      <div class="week-grid" id="weekGrid"></div>
-
-      <!-- WEEKLY AI SUMMARY -->
-      <div class="card week-sum-card">
-        <div class="ws-head">
-          <div class="ws-title">📊 Weekly Summary</div>
-          <div class="ws-range" id="wsRange"></div>
-        </div>
-        <div class="ws-stats">
-          <div class="ws-stat"><div class="ws-stat-n" id="wsDue">0</div><div class="ws-stat-l">Due</div></div>
-          <div class="ws-stat"><div class="ws-stat-n" id="wsDone">0</div><div class="ws-stat-l">Done</div></div>
-          <div class="ws-stat"><div class="ws-stat-n" id="wsUrg">0</div><div class="ws-stat-l">Urgent</div></div>
-        </div>
-        <div class="ws-body" id="wsText" style="margin-top:14px"><span style="color:var(--dim);font-style:italic">Generating weekly summary…</span></div>
-        <button class="sum-regen" onclick="genWeeklySummary()">↺ Regenerate</button>
-      </div>
-
-      <!-- TODAY + UPCOMING -->
-      <div class="g2">
-        <div class="card" style="padding:20px">
-          <div class="sec-h"><h3>Today's Schedule</h3><button class="sec-btn" onclick="go('calendar')">→</button></div>
-          <div id="todaySched"></div>
-        </div>
-        <div class="card" style="padding:20px">
-          <div class="sec-h"><h3>Upcoming</h3><button class="sec-btn" onclick="go('reminders')">→</button></div>
-          <div id="upcomingList"></div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Reminders</span>
+            <button class="panel-btn" onclick="openModal('reminder-modal')">+ Add</button>
+          </div>
+          <div class="panel-body">
+            <div id="reminders-list"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ── CALENDAR ── -->
+    <!-- CALENDAR -->
     <div class="page" id="page-calendar">
-      <div class="pg-head"><div><div class="pg-h1">📅 Calendar</div><div class="pg-sub">Your full schedule</div></div></div>
-      <div class="cal-wrap">
-        <div class="card" style="padding:22px">
-          <div class="cal-nav">
-            <button class="cal-arr" onclick="chMon(-1)">‹</button>
-            <div class="cal-lbl" id="calLbl"></div>
-            <button class="cal-arr" onclick="chMon(1)">›</button>
-          </div>
-          <div class="cal-g" id="calGrid"></div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Week View</span>
+          <button class="panel-btn" onclick="openModal('event-modal')">+ Add Event</button>
         </div>
-        <div class="card" style="padding:22px">
-          <div class="sec-h"><h3 id="calDayTitle">Events</h3></div>
-          <div id="calDayList"></div>
+        <div class="panel-body" style="overflow-x:auto;">
+          <div class="week-grid" id="week-grid"></div>
         </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">All Events</span></div>
+        <div class="panel-body" id="all-events-list"></div>
       </div>
     </div>
 
-    <!-- ── REMINDERS ── -->
+    <!-- REMINDERS -->
     <div class="page" id="page-reminders">
-      <div class="pg-head"><div><div class="pg-h1">✔ Reminders</div><div class="pg-sub">Your personal task list</div></div></div>
-      <div class="form-card">
-        <div class="form-title">+ New Reminder</div>
-        <div class="frow f1"><input class="fi" id="rTitle" placeholder="Reminder title…"/></div>
-        <div class="frow f3">
-          <input class="fi" id="rDate" type="date"/>
-          <input class="fi" id="rTime" type="time"/>
-          <select class="fi" id="rCat"><option value="Personal">Personal</option><option value="Work">Work</option><option value="Urgent">Urgent</option><option value="Health">Health</option></select>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">All Reminders</span>
+          <button class="panel-btn" onclick="openModal('reminder-modal')">+ Add Reminder</button>
         </div>
-        <div class="frow f1"><input class="fi" id="rNote" placeholder="Notes (optional)…"/></div>
-        <div class="form-btns">
-          <button class="btn-gold btn-sm" onclick="addRem()">Add Reminder</button>
-          <button class="btn-s2 btn-sm" onclick="clrForm()">Clear</button>
-        </div>
-      </div>
-      <div class="sec-h"><h3>All Reminders</h3></div>
-      <div id="allRem"></div>
-    </div>
-
-    <!-- ── EMAILS ── -->
-    <div class="page" id="page-emails">
-      <div class="pg-head"><div><div class="pg-h1">✉ Email Accounts</div><div class="pg-sub">Connected mail accounts</div></div></div>
-      <div class="email-card">
-        <div class="email-ico" style="background:rgba(234,67,53,.13);color:#EA4335">G</div>
-        <div class="email-info"><div class="email-n">Gmail — Personal</div><div class="email-a">melvine@gmail.com</div></div>
-        <div class="pip-wrap"><div class="epip on"></div><span class="epip-lbl on">Connected</span></div>
-      </div>
-      <div class="email-card">
-        <div class="email-ico" style="background:rgba(79,143,255,.13);color:var(--blue)">Z</div>
-        <div class="email-info"><div class="email-n">Zoho Mail — Work</div><div class="email-a">sir.melvine@zohomail.com</div></div>
-        <div class="pip-wrap"><div class="epip off"></div><span class="epip-lbl off">Pending</span></div>
-      </div>
-      <div class="card" style="margin-top:20px;background:var(--glow2);border-color:var(--glow)">
-        <div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--gold);margin-bottom:8px">💡 Ask Nebula about your emails</div>
-        <div style="font-size:12.5px;color:var(--dim2);line-height:1.8">
-          Press ✦ and try:<br>
-          <code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.3);padding:2px 7px;border-radius:5px">"Draft an email to the team about tomorrow's meeting"</code>
-        </div>
+        <div class="panel-body" id="all-reminders-list"></div>
       </div>
     </div>
 
-    <!-- ── SETTINGS ── -->
-    <div class="page" id="page-settings">
-      <div class="pg-head"><div><div class="pg-h1">⚙ Settings</div><div class="pg-sub">Manage your preferences</div></div></div>
-      <div class="sets-g">
-        <div class="sets-g-title">Notifications</div>
-        <div class="tog-row"><div><div class="tog-l">Daily Briefing</div><div class="tog-s">Morning summary at 9:00 AM EAT</div></div><label class="tsw"><input type="checkbox" id="togBriefing" checked onchange="saveSetting('briefing',this.checked)"/><div class="tsl"></div></label></div>
-        <div class="tog-row"><div><div class="tog-l">Reminder Alerts</div><div class="tog-s">Push at reminder time</div></div><label class="tsw"><input type="checkbox" id="togAlerts" checked onchange="saveSetting('alerts',this.checked)"/><div class="tsl"></div></label></div>
-        <div class="tog-row"><div><div class="tog-l">10-Minute Warning</div><div class="tog-s">Early heads-up before reminders</div></div><label class="tsw"><input type="checkbox" id="tog10" checked onchange="saveSetting('warn10',this.checked)"/><div class="tsl"></div></label></div>
-      </div>
-      <div class="sets-g">
-        <div class="sets-g-title">Application</div>
-        <div class="tog-row" onclick="installPWA()"><div><div class="tog-l">📲 Install to Home Screen</div><div class="tog-s">Add as native app</div></div><span style="color:var(--gold);font-size:20px">›</span></div>
-        <div class="tog-row" onclick="reqNotif()"><div><div class="tog-l">🔔 Enable Push Notifications</div><div class="tog-s">Required for briefings and reminders</div></div><span style="color:var(--gold);font-size:20px">›</span></div>
-      </div>
-    </div>
+  </main>
 
-  </div><!-- /main-wrap -->
+  <!-- AI CHAT -->
+  <aside class="right-panel">
+    <div class="chat-header">
+      <h3>Nebula Assistant</h3>
+      <p>Ask me about your schedule</p>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg msg-ai">
+        <div class="msg-bubble">Good day, Sir Melvine! I can help with your schedule, events, and reminders. What do you need?</div>
+        <div class="msg-time">Now</div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <div class="chat-suggestions">
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">Today's schedule</span>
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">Next event</span>
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">My reminders</span>
+      </div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ask Nebula..." onkeydown="chatKeyDown(event)"></textarea>
+        <button class="chat-send" onclick="sendChat()">&#10148;</button>
+      </div>
+    </div>
+  </aside>
+</div>
 
-  <!-- ══ NEBULA AI ══ -->
-  <div class="ai-panel" id="aiPanel">
-    <div class="aip-head">
-      <div class="nebula-orb"></div>
-      <div class="aip-info">
-        <div class="aip-name">Nebula</div>
-        <div class="aip-live"><div class="live-dot"></div>Online</div>
-      </div>
-      <button class="aip-rst" onclick="resetAI()">↺</button>
+<!-- ADD EVENT MODAL -->
+<div class="modal-overlay" id="event-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('event-modal')">&#10005;</button>
+    <h2>Add Event</h2>
+    <div class="form-group">
+      <label class="form-label">Event Title *</label>
+      <input class="form-input" id="ev-title" type="text" placeholder="e.g. Team Meeting">
     </div>
-    <div class="aip-msgs" id="aipMsgs">
-      <div class="msg a"><div class="mb">Peace be with you, Sir Melvine 🙏<br><br>I'm Nebula — your AI command assistant. I have full context on your schedule and reminders. What do you need?</div></div>
-      <div class="chips" id="chips">
-        <button class="chip" onclick="chipSend(this)">📋 Summarise my day</button>
-        <button class="chip" onclick="chipSend(this)">📅 What's due this week?</button>
-        <button class="chip" onclick="chipSend(this)">✝️ Give me a devotional thought</button>
-        <button class="chip" onclick="chipSend(this)">⚠️ Any urgent items?</button>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-input" id="ev-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Time</label>
+        <input class="form-input" id="ev-time" type="time">
       </div>
     </div>
-    <div class="aip-input-wrap">
-      <div class="aip-row">
-        <textarea class="aip-ta" id="aipTa" placeholder="Ask Nebula…" rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"
-          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
-        <button class="send-btn" onclick="sendAI()">➤</button>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Duration</label>
+        <select class="form-select" id="ev-duration">
+          <option>15 min</option>
+          <option selected>30 min</option>
+          <option>1 hour</option>
+          <option>2 hours</option>
+          <option>All day</option>
+        </select>
       </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <select class="form-select" id="ev-color">
+          <option value="accent">Purple</option>
+          <option value="green">Green</option>
+          <option value="orange">Orange</option>
+          <option value="red">Red</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <input class="form-input" id="ev-notes" type="text" placeholder="Optional notes...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('event-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEvent()">Save Event</button>
     </div>
   </div>
-
-</div><!-- /app-body -->
-
-<button class="mob-fab" onclick="toggleAI()">✦</button>
-<div class="bot-nav">
-  <div class="bn-item on" id="bn-home" onclick="go('home')"><div class="bn-ico">⬛</div><div class="bn-lbl">Home</div></div>
-  <div class="bn-item" id="bn-calendar" onclick="go('calendar')"><div class="bn-ico">📅</div><div class="bn-lbl">Cal</div></div>
-  <div class="bn-item" id="bn-reminders" onclick="go('reminders')"><div class="bn-ico">✔</div><div class="bn-lbl">Tasks</div></div>
-  <div class="bn-item" id="bn-emails" onclick="go('emails')"><div class="bn-ico">✉</div><div class="bn-lbl">Email</div></div>
-  <div class="bn-item" id="bn-settings" onclick="go('settings')"><div class="bn-ico">⚙</div><div class="bn-lbl">More</div></div>
 </div>
+
+<!-- ADD REMINDER MODAL -->
+<div class="modal-overlay" id="reminder-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('reminder-modal')">&#10005;</button>
+    <h2>Add Reminder</h2>
+    <div class="form-group">
+      <label class="form-label">Reminder *</label>
+      <input class="form-input" id="rem-text" type="text" placeholder="e.g. Call Dr. Smith">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+        <input class="form-input" id="rem-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="rem-priority">
+          <option value="high">High</option>
+          <option value="med" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('reminder-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveReminder()">Save Reminder</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══ STATE ══ */
-let rems = JSON.parse(localStorage.getItem('sm_rem')||'[]');
-let sets = JSON.parse(localStorage.getItem('sm_set')||'{"briefing":true,"alerts":true,"warn10":true}');
-let calY, calM, calSel, sbSlim=false, aiGone=false, dInstall=null, chatHist=[];
+let events = JSON.parse(localStorage.getItem('sm_events') || '[]');
+let reminders = JSON.parse(localStorage.getItem('sm_reminders') || '[]');
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
 
-/* ══ BIBLE VERSES (offline fallback pool) ══ */
-const VERSES = [
-  {v:"For I know the plans I have for you, declares the LORD, plans to prosper you and not to harm you, plans to give you hope and a future.",r:"Jeremiah 29:11"},
-  {v:"I can do all this through him who gives me strength.",r:"Philippians 4:13"},
-  {v:"The LORD is my shepherd, I lack nothing.",r:"Psalm 23:1"},
-  {v:"Trust in the LORD with all your heart and lean not on your own understanding.",r:"Proverbs 3:5"},
-  {v:"Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.",r:"Joshua 1:9"},
-  {v:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",r:"Romans 8:28"},
-  {v:"The name of the LORD is a fortified tower; the righteous run to it and are safe.",r:"Proverbs 18:10"},
-  {v:"Come to me, all you who are weary and burdened, and I will give you rest.",r:"Matthew 11:28"},
-  {v:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"Matthew 6:33"},
-  {v:"Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged.",r:"Joshua 1:9"},
-  {v:"The LORD your God is with you, the Mighty Warrior who saves. He will take great delight in you.",r:"Zephaniah 3:17"},
-  {v:"Commit to the LORD whatever you do, and he will establish your plans.",r:"Proverbs 16:3"},
-  {v:"For it is by grace you have been saved, through faith — and this is not from yourselves, it is the gift of God.",r:"Ephesians 2:8"},
-  {v:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",r:"Philippians 4:6"},
-];
-
-/* ══ BOOT ══ */
-addEventListener('load', ()=>{
-  const n = new Date();
-  calY=n.getFullYear(); calM=n.getMonth(); calSel=new Date(n);
-  tick(); setInterval(tick,1000);
-  renderHome(); renderCal(); renderAllRem(); updBadge();
-  schedAll(); schedBriefing(); loadSets(); updBriefingNxt(); setInterval(updBriefingNxt,60000);
-  document.getElementById('rDate').value = ds(n);
-  document.getElementById('greeting').textContent = n.getHours()<12?'Morning':n.getHours()<17?'Afternoon':'Evening';
-  loadBibleVerse();
-  genDailySummary();
-  genWeeklySummary();
+document.addEventListener('DOMContentLoaded', function() {
+  setGreeting();
+  renderMiniCal();
+  renderAll();
+  setDefaultDates();
 });
-addEventListener('beforeinstallprompt', e=>{e.preventDefault();dInstall=e;});
 
-/* ══ CLOCK ══ */
-function tick(){
-  const n=new Date(), p=x=>String(x).padStart(2,'0'), h=n.getHours();
-  document.getElementById('ch').textContent=p(h);
-  document.getElementById('cm').textContent=p(n.getMinutes());
-  document.getElementById('cs').textContent=p(n.getSeconds());
-  document.getElementById('tbDate').textContent=n.toLocaleDateString('en-KE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const g=document.getElementById('greeting'); if(g) g.textContent=h<12?'Morning':h<17?'Afternoon':'Evening';
-  const fd=document.getElementById('fullDate'); if(fd) fd.textContent=n.toLocaleDateString('en-KE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const hl=document.getElementById('heroBriefLabel'); if(hl) hl.textContent=h<12?'Good Morning':h<17?'Good Afternoon':'Good Evening';
+function setDefaultDates() {
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('ev-date').value = today;
+  document.getElementById('rem-date').value = today;
+  var now = new Date();
+  now.setMinutes(0);
+  now.setHours(now.getHours() + 1);
+  document.getElementById('ev-time').value = now.toTimeString().slice(0,5);
 }
 
-/* ══ BIBLE VERSE ══ */
-async function loadBibleVerse(){
-  const vEl=document.getElementById('bibleVerse'), rEl=document.getElementById('bibleRef');
-  vEl.innerHTML='<span class="bible-loading">Loading today\'s verse…</span>';
-  rEl.textContent='';
-  // Try API.Bible free endpoint
-  try {
-    const res = await fetch('https://beta.ourmanna.com/api/v1/get?format=json&order=daily');
-    if(res.ok){
-      const d = await res.json();
-      const verse = d.verse?.details?.text || d.verse?.details?.reference;
-      const ref = d.verse?.details?.reference;
-      if(verse && ref){
-        vEl.textContent = verse;
-        rEl.textContent = '— '+ref;
-        return;
-      }
-    }
-  } catch(e){}
-  // Fallback: pick by day-of-year
-  const doy = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
-  const pick = VERSES[doy % VERSES.length];
-  vEl.textContent = pick.v;
-  rEl.textContent = '— '+pick.r;
+function setGreeting() {
+  var h = new Date().getHours();
+  var g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting-text').textContent = g + ', Sir Melvine';
+  document.getElementById('greeting-date').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
 }
 
-/* ══ AI DAILY SUMMARY ══ */
-async function genDailySummary(){
-  const el = document.getElementById('sumText');
-  const badge = document.getElementById('sumBadge');
-  el.innerHTML = '<span style="color:var(--dim);font-style:italic">Generating briefing…</span>';
-  badge.textContent = '...';
-  const n=new Date(), today=ds(n), h=n.getHours();
-  const greeting = h<12?'morning':h<17?'afternoon':'evening';
-  const todR = rems.filter(r=>r.date===today);
-  const pending = rems.filter(r=>!r.done&&r.date>=today).length;
-  const urgent = rems.filter(r=>!r.done&&r.cat==='Urgent').length;
-  const fmt = r=>`${r.time?fmtT(r.time):'—'} ${r.title} (${r.cat})`;
-  const prompt = `Generate a warm, encouraging daily briefing for Sir Melvine. It's ${greeting} on ${n.toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric'})} EAT.
-
-Today's reminders: ${todR.length>0?todR.map(fmt).join(', '):'Nothing scheduled today.'}
-Pending this week: ${pending} items. Urgent: ${urgent} items.
-
-Write 2-3 sentences. Be warm and personal. Reference his name naturally. Mention today's items if any. End with brief encouragement. Keep it under 60 words.`;
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})
-    });
-    const data = await res.json();
-    const text = data.content?.map(c=>c.text||'').join('')||'';
-    if(text){ el.innerHTML = fmtAI(text); badge.textContent='Live'; return; }
-  } catch(e){}
-  // Fallback
-  const todayCount = rems.filter(r=>r.date===today&&!r.done).length;
-  el.innerHTML = `Good ${greeting}, Sir Melvine! You have <strong>${todayCount} item${todayCount!==1?'s':''}</strong> scheduled for today${urgent>0?` including <strong>${urgent} urgent</strong>`:''}. ${pending>0?`<strong>${pending} items</strong> are pending this week. `:''}Have a blessed and productive day! 🙏`;
-  badge.textContent='Ready';
+function showPage(name, tab) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
+  tab.classList.add('active');
+  if (name === 'calendar') renderWeekView();
+  if (name === 'reminders') renderAllReminders();
 }
 
-/* ══ AI WEEKLY SUMMARY ══ */
-async function genWeeklySummary(){
-  const el = document.getElementById('wsText');
-  el.innerHTML = '<span style="color:var(--dim);font-style:italic">Generating weekly summary…</span>';
-  const n=new Date();
-  const ws=wkStart(n); const we=new Date(ws); we.setDate(ws.getDate()+6);
-  const wkR = rems.filter(r=>{const d=new Date(r.date);return d>=ws&&d<=we;});
-  const due = wkR.filter(r=>!r.done).length;
-  const done = wkR.filter(r=>r.done).length;
-  const urg = wkR.filter(r=>r.cat==='Urgent'&&!r.done).length;
-  document.getElementById('wsDue').textContent=due;
-  document.getElementById('wsDone').textContent=done;
-  document.getElementById('wsUrg').textContent=urg;
-  const rangeStr = `${ws.toLocaleDateString('en-KE',{month:'short',day:'numeric'})} – ${we.toLocaleDateString('en-KE',{month:'short',day:'numeric'})}`;
-  document.getElementById('wsRange').textContent=rangeStr;
-  const cats = {};
-  wkR.forEach(r=>{ cats[r.cat]=(cats[r.cat]||0)+1; });
-  const catStr = Object.entries(cats).map(([k,v])=>`${v} ${k}`).join(', ');
-  const prompt = `Write a concise weekly summary for Sir Melvine for the week of ${rangeStr}.
-
-Stats: ${due} items due, ${done} completed, ${urg} urgent. Categories: ${catStr||'none'}.
-Items: ${wkR.slice(0,8).map(r=>`${r.title} (${r.cat}${r.done?', done':''})`).join('; ')||'None this week.'}
-
-Write 2-3 sentences. Be analytical and encouraging. Reference patterns or priorities. Under 70 words.`;
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})
-    });
-    const data = await res.json();
-    const text = data.content?.map(c=>c.text||'').join('')||'';
-    if(text){ el.innerHTML=fmtAI(text); return; }
-  } catch(e){}
-  // Fallback
-  if(wkR.length===0){
-    el.innerHTML='<strong>Clear week ahead.</strong> No items scheduled this week. A great time to plan ahead and rest.';
-  } else {
-    el.innerHTML=`This week has <strong>${due} pending item${due!==1?'s':''}</strong> across ${Object.keys(cats).length} categories.${urg>0?` <strong>${urg} urgent item${urg!==1?'s':''}</strong> need attention.`:''} ${done>0?`You've already completed <strong>${done} item${done!==1?'s':''}</strong> — great progress!`:'Keep going, Sir Melvine!'}`;
-  }
-}
-
-/* ══ NAV ══ */
-function toggleSB(){ sbSlim=!sbSlim; document.getElementById('sidebar').classList.toggle('slim',sbSlim); }
-function toggleAI(){ aiGone=!aiGone; document.getElementById('aiPanel').classList.toggle('gone',aiGone); document.getElementById('aiBtn').classList.toggle('on',!aiGone); }
-
-function go(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
-  document.querySelectorAll('.bn-item').forEach(n=>n.classList.remove('on'));
-  document.getElementById('page-'+name).classList.add('on');
-  const nv=document.getElementById('nav-'+name); if(nv)nv.classList.add('on');
-  const bn=document.getElementById('bn-'+name); if(bn)bn.classList.add('on');
-  if(name==='home') renderHome();
-  if(name==='reminders') renderAllRem();
-  if(name==='calendar') renderCal();
-}
-
-/* ══ HOME ══ */
-function renderHome(){
-  const n=new Date(), today=ds(n);
-  const ws=wkStart(n); const we=new Date(ws); we.setDate(ws.getDate()+6);
-  const todI=rems.filter(r=>r.date===today);
-  const wkI=rems.filter(r=>{const d=new Date(r.date);return d>=ws&&d<=we&&!r.done;});
-  document.getElementById('stToday').textContent=todI.filter(r=>!r.done).length;
-  document.getElementById('stDone').textContent=rems.filter(r=>r.date===today&&r.done).length;
-  document.getElementById('stWeek').textContent=wkI.length;
-  document.getElementById('stTotal').textContent=rems.length;
-  // hero subtitle
-  const heroSub=document.getElementById('heroSub');
-  if(heroSub){
-    const due=todI.filter(r=>!r.done).length, done=rems.filter(r=>r.date===today&&r.done).length;
-    heroSub.textContent=due>0?`${due} item${due!==1?'s':''} today · ${done} completed`:'Nothing scheduled today — have a blessed day 🙏';
-  }
-
-  // week grid
-  const wg=document.getElementById('weekGrid'); if(!wg) return;
-  let wh='';
-  for(let i=0;i<7;i++){
-    const d=new Date(ws); d.setDate(ws.getDate()+i);
-    const dstr=ds(d), isT=dstr===today;
-    const items=rems.filter(r=>r.date===dstr);
-    wh+=`<div class="day-col ${isT?'today':''}">
-      <div class="day-head"><div class="day-dn">${d.toLocaleDateString('en-KE',{weekday:'short'})}</div><div class="day-num">${d.getDate()}</div></div>
-      <div class="day-items">
-        ${items.length===0?'<div class="dfree">—</div>':items.slice(0,3).map(r=>`<div class="dchip">${esc(r.title)}</div>`).join('')}
-        ${items.length>3?`<div class="dmore">+${items.length-3}</div>`:''}
-      </div></div>`;
-  }
-  wg.innerHTML=wh;
-
-  const cb={Personal:'var(--red)',Work:'var(--blue)',Urgent:'var(--gold)',Health:'var(--grn)'};
-  const sorted=[...todI].sort((a,b)=>a.time.localeCompare(b.time));
-  document.getElementById('todaySched').innerHTML=sorted.length===0
-    ?`<div class="empty"><div class="empty-ico">✨</div>Free day ahead!</div>`
-    :sorted.map(r=>`<div class="sched-item">
-        <div class="si-time">${r.time?fmtT(r.time):'—'}</div>
-        <div class="si-bar" style="background:${cb[r.cat]||'var(--dim)'}"></div>
-        <div class="si-body"><div class="si-t">${esc(r.title)}</div>${r.note?`<div class="si-n">${esc(r.note)}</div>`:''}</div>
-        <span class="badge b${r.cat[0].toLowerCase()}">${r.cat}</span>
-      </div>`).join('');
-
-  const up=rems.filter(r=>!r.done&&r.date>=today).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
-  document.getElementById('upcomingList').innerHTML=up.length===0
-    ?`<div class="empty"><div class="empty-ico">📋</div>No upcoming reminders</div>`
-    :up.map(r=>`<div class="rem-item">
-        <input type="checkbox" class="rem-cb" ${r.done?'checked':''} onchange="togRem('${r.id}',this.checked)"/>
-        <div class="rem-body"><div class="rem-t">${esc(r.title)}</div><div class="rem-m">${fmtD(r.date)}${r.time?' · '+fmtT(r.time):''}</div></div>
-      </div>`).join('');
-}
-
-/* ══ REMINDERS ══ */
-function addRem(){
-  const title=document.getElementById('rTitle').value.trim();
-  if(!title){toast('Please enter a title');return;}
-  const r={id:Date.now().toString(),title,date:document.getElementById('rDate').value,time:document.getElementById('rTime').value,cat:document.getElementById('rCat').value,note:document.getElementById('rNote').value.trim(),done:false};
-  rems.push(r);save();clrForm();renderAllRem();renderHome();updBadge();schedNotif(r);toast('✓ Reminder added');
-}
-function clrForm(){
-  ['rTitle','rNote'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('rDate').value=ds(new Date());
-  document.getElementById('rTime').value='';
-  document.getElementById('rCat').value='Personal';
-}
-function togRem(id,done){ rems=rems.map(r=>r.id===id?{...r,done}:r); save();renderAllRem();renderHome();updBadge(); }
-function delRem(id){ rems=rems.filter(r=>r.id!==id); save();renderAllRem();renderHome();updBadge();toast('Deleted'); }
-function renderAllRem(){
-  const c=document.getElementById('allRem'); if(!c) return;
-  const sorted=[...rems].sort((a,b)=>{if(a.done!==b.done)return a.done?1:-1;return(a.date+a.time).localeCompare(b.date+b.time);});
-  c.innerHTML=sorted.length===0
-    ?`<div class="empty"><div class="empty-ico">📋</div>No reminders yet. Add your first above!</div>`
-    :sorted.map(r=>`<div class="rem-item">
-        <input type="checkbox" class="rem-cb" ${r.done?'checked':''} onchange="togRem('${r.id}',this.checked)"/>
-        <div class="rem-body">
-          <div class="rem-t ${r.done?'done':''}">${esc(r.title)}</div>
-          <div class="rem-m">${r.date?fmtD(r.date):'No date'}${r.time?' · '+fmtT(r.time):''} · <span class="badge b${r.cat[0].toLowerCase()}">${r.cat}</span>${r.note?'<br>'+esc(r.note):''}</div>
-        </div>
-        <button class="rem-del" onclick="delRem('${r.id}')">✕</button>
-      </div>`).join('');
-}
-function updBadge(){ const n=rems.filter(r=>!r.done).length; const b=document.getElementById('remBadge'); if(b){b.textContent=n;b.style.display=n>0?'':'none';} }
-
-/* ══ CALENDAR ══ */
-function renderCal(){
-  const lbl=document.getElementById('calLbl'); if(!lbl) return;
-  lbl.textContent=new Date(calY,calM).toLocaleDateString('en-KE',{month:'long',year:'numeric'});
-  const g=document.getElementById('calGrid');
-  let h=['S','M','T','W','T','F','S'].map(d=>`<div class="cal-hd">${d}</div>`).join('');
-  const first=new Date(calY,calM,1).getDay(), dim=new Date(calY,calM+1,0).getDate(), tod=new Date();
-  const evSet=new Set(rems.map(r=>r.date));
-  for(let i=0;i<first;i++){const pv=new Date(calY,calM,0-first+i+1);h+=`<div class="cal-d dim">${pv.getDate()}</div>`;}
-  for(let d=1;d<=dim;d++){
-    const dstr=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isT=d===tod.getDate()&&calM===tod.getMonth()&&calY===tod.getFullYear();
-    const isSel=calSel&&dstr===ds(calSel);
-    h+=`<div class="cal-d ${isT?'today':''} ${!isT&&isSel?'sel':''} ${evSet.has(dstr)?'has':''}" onclick="selDay('${dstr}')">${d}</div>`;
-  }
-  g.innerHTML=h; renderCalDay(ds(calSel||tod));
-}
-function selDay(dstr){ calSel=new Date(dstr+'T00:00:00'); renderCal(); }
-function renderCalDay(dstr){
-  const lbl=document.getElementById('calDayTitle'), c=document.getElementById('calDayList'); if(!lbl||!c) return;
-  lbl.textContent=new Date(dstr+'T00:00:00').toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric'});
-  const items=rems.filter(r=>r.date===dstr).sort((a,b)=>a.time.localeCompare(b.time));
-  const cb={Personal:'var(--red)',Work:'var(--blue)',Urgent:'var(--gold)',Health:'var(--grn)'};
-  c.innerHTML=items.length===0
-    ?`<div class="empty"><div class="empty-ico">✨</div>Nothing scheduled.</div>`
-    :items.map(r=>`<div class="sched-item">
-        <div class="si-time">${r.time?fmtT(r.time):'—'}</div>
-        <div class="si-bar" style="background:${cb[r.cat]||'var(--dim)'}"></div>
-        <div class="si-body"><div class="si-t">${esc(r.title)}</div>${r.note?`<div class="si-n">${esc(r.note)}</div>`:''}</div>
-        <span class="badge b${r.cat[0].toLowerCase()}">${r.cat}</span>
-      </div>`).join('');
-}
-function chMon(d){ calM+=d; if(calM<0){calM=11;calY--;} if(calM>11){calM=0;calY++;} renderCal(); }
-
-/* ══ NEBULA AI ══ */
-function buildSys(){
-  const n=new Date(), today=ds(n);
-  const ws=wkStart(n); const we=new Date(ws); we.setDate(ws.getDate()+6);
-  const todR=rems.filter(r=>r.date===today);
-  const wkR=rems.filter(r=>{const d=new Date(r.date);return d>=ws&&d<=we;});
-  const pend=rems.filter(r=>!r.done).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
-  const fmt=r=>`  [${r.done?'✓':'○'}] ${r.date} ${r.time||'—'} | ${r.title} (${r.cat})${r.note?' — '+r.note:''}`;
-  return `You are Nebula, an elite AI command assistant for Sir Melvine's personal Command Center. He is a Christian and values faith, productivity, and excellence.
-
-Current time: ${n.toLocaleString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})} EAT
-
-TODAY: ${todR.length?todR.map(fmt).join('\n'):'Nothing today.'}
-THIS WEEK: ${wkR.length?wkR.map(fmt).join('\n'):'Nothing this week.'}
-PENDING (top 10): ${pend.slice(0,10).map(fmt).join('\n')||'None.'}
-TOTALS: ${rems.length} total · ${rems.filter(r=>r.done).length} done · ${pend.length} pending
-
-Be concise, warm, professional — like a sharp executive assistant who also shares faith. Occasionally reference scripture naturally when relevant. Keep responses focused.`;
-}
-
-async function sendAI(){
-  const inp=document.getElementById('aipTa');
-  const text=inp.value.trim(); if(!text) return;
-  inp.value=''; inp.style.height='auto';
-  hideChips();
-  addMsg('u',text);
-  const tid=addThinking();
-  chatHist.push({role:'user',content:text});
-  try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSys(),messages:chatHist})
-    });
-    const data=await res.json();
-    rmEl(tid);
-    const reply=data.content?.map(c=>c.text||'').join('')||'I had trouble responding. Try again.';
-    addMsg('a',reply);
-    chatHist.push({role:'assistant',content:reply});
-  } catch(e){
-    rmEl(tid);
-    addMsg('a','⚠️ Connection error. Please check your network.');
-  }
-}
-function chipSend(btn){ document.getElementById('aipTa').value=btn.textContent.replace(/^[\p{Emoji}\s]+/u,'').trim(); hideChips(); sendAI(); }
-function hideChips(){ const c=document.getElementById('chips'); if(c) c.style.display='none'; }
-function addMsg(role,text){
-  const w=document.getElementById('aipMsgs');
-  const d=document.createElement('div'); d.className=`msg ${role}`;
-  d.innerHTML=`<div class="mb">${role==='u'?esc(text):fmtAI(text)}</div>`;
-  w.appendChild(d); w.scrollTop=w.scrollHeight;
-}
-function addThinking(){
-  const id='t'+Date.now(), w=document.getElementById('aipMsgs');
-  const d=document.createElement('div'); d.id=id;
-  d.innerHTML=`<div class="thinking"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
-  w.appendChild(d); w.scrollTop=w.scrollHeight; return id;
-}
-function rmEl(id){ const e=document.getElementById(id); if(e) e.remove(); }
-function fmtAI(t){
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/`([^`]+)`/g,'<code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px">$1</code>')
-    .replace(/\n/g,'<br>');
-}
-function resetAI(){
-  chatHist=[];
-  document.getElementById('aipMsgs').innerHTML=`
-    <div class="msg a"><div class="mb">Cleared, Sir Melvine 🙏 — still here. What do you need?</div></div>
-    <div class="chips" id="chips">
-      <button class="chip" onclick="chipSend(this)">📋 Summarise my day</button>
-      <button class="chip" onclick="chipSend(this)">✝️ Give me a devotional thought</button>
-      <button class="chip" onclick="chipSend(this)">⚠️ Any urgent items?</button>
-    </div>`;
-}
-
-/* ══ NOTIFICATIONS ══ */
-function reqNotif(){
-  if(!('Notification'in window)){toast('Not supported');return;}
-  Notification.requestPermission().then(p=>{
-    if(p==='granted'){toast('✓ Notifications enabled');document.getElementById('bellBtn').classList.add('on');schedAll();schedBriefing();}
-    else toast('Enable in browser settings');
+function renderMiniCal() {
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = months[calMonth] + ' ' + calYear;
+  var grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){
+    var el = document.createElement('div');
+    el.className = 'cal-day-name';
+    el.textContent = d;
+    grid.appendChild(el);
   });
+  var first = new Date(calYear, calMonth, 1).getDay();
+  var days = new Date(calYear, calMonth + 1, 0).getDate();
+  var today = new Date();
+  for (var i = 0; i < first; i++) {
+    var el = document.createElement('div');
+    el.className = 'cal-day other-month';
+    grid.appendChild(el);
+  }
+  for (var d = 1; d <= days; d++) {
+    var el = document.createElement('div');
+    el.className = 'cal-day';
+    el.textContent = d;
+    var ds = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    if (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()) el.classList.add('today');
+    if (events.some(function(e){ return e.date === ds; })) el.classList.add('has-event');
+    (function(dateStr){
+      el.onclick = function(){ highlightDay(dateStr); };
+    })(ds);
+    grid.appendChild(el);
+  }
 }
-function schedNotif(r){
-  if(Notification.permission!=='granted'||!r.date||!r.time) return;
-  const dt=new Date(`${r.date}T${r.time}`); if(isNaN(dt)) return;
-  const ms=dt-Date.now();
-  if(ms-600000>0&&sets.warn10) setTimeout(()=>new Notification('⏰ Sir Melvine — 10 min',{body:r.title}),ms-600000);
-  if(ms>0&&sets.alerts) setTimeout(()=>new Notification('🔔 Sir Melvine',{body:r.title+(r.note?'\n'+r.note:'')}),ms);
-}
-function schedAll(){ rems.filter(r=>!r.done).forEach(schedNotif); }
-function schedBriefing(){
-  if(Notification.permission!=='granted'||!sets.briefing) return;
-  const n=new Date(), nx=new Date(n); nx.setHours(9,0,0,0);
-  if(n>=nx) nx.setDate(nx.getDate()+1);
-  setTimeout(()=>{fireBriefing();setInterval(fireBriefing,86400000);},nx-n);
-}
-function fireBriefing(){
-  const today=ds(new Date());
-  const items=rems.filter(r=>r.date===today&&!r.done);
-  new Notification('☀️ Good Morning, Sir Melvine!',{body:items.length>0?`Today: ${items.map(r=>r.title).join(', ')}`:'No items today. Have a blessed day! 🙏'});
-}
-function updBriefingNxt(){
-  const n=new Date(), nx=new Date(n); nx.setHours(9,0,0,0);
-  if(n>=nx) nx.setDate(nx.getDate()+1);
-  const ms=nx-n, h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000);
+function prevMonth() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderMiniCal(); }
+function nextMonth() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderMiniCal(); }
+
+function renderAll() {
+  renderStats();
+  renderTimeline();
+  renderRemindersList();
+  renderUpcoming();
+  renderMiniCal();
 }
 
-/* ══ SETTINGS ══ */
-function saveSetting(k,v){ sets[k]=v; localStorage.setItem('sm_set',JSON.stringify(sets)); toast('✓ Saved'); if(k==='briefing'&&v) schedBriefing(); }
-function loadSets(){
-  document.getElementById('togBriefing').checked=sets.briefing!==false;
-  document.getElementById('togAlerts').checked=sets.alerts!==false;
-  document.getElementById('tog10').checked=sets.warn10!==false;
-  if(Notification.permission==='granted') document.getElementById('bellBtn').classList.add('on');
+function renderStats() {
+  var today = new Date().toISOString().split('T')[0];
+  var nowTime = new Date().toTimeString().slice(0,5);
+  document.getElementById('stat-events').textContent = events.filter(function(e){ return e.date === today; }).length;
+  document.getElementById('stat-reminders').textContent = reminders.filter(function(r){ return !r.done; }).length;
+  document.getElementById('stat-done').textContent = reminders.filter(function(r){ return r.done; }).length;
+  var up = events.filter(function(e){ return e.date === today && e.time >= nowTime; }).sort(function(a,b){ return a.time.localeCompare(b.time); });
+  document.getElementById('stat-next').textContent = up.length ? up[0].time : '--';
 }
-function installPWA(){ if(dInstall){dInstall.prompt();dInstall.userChoice.then(r=>{if(r.outcome==='accepted')toast('✓ App installed!');dInstall=null;});}else toast('Browser menu › Add to Home Screen'); }
 
-/* ══ UTILS ══ */
-function save(){ localStorage.setItem('sm_rem',JSON.stringify(rems)); }
-function ds(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function wkStart(d){ const s=new Date(d); s.setDate(d.getDate()-d.getDay()); s.setHours(0,0,0,0); return s; }
-function fmtT(t){ if(!t)return''; const[h,m]=t.split(':').map(Number); return`${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; }
-function fmtD(dstr){
-  if(!dstr)return'No date';
-  try{ const d=new Date(dstr+'T00:00:00'),today=ds(new Date()),tom=ds(new Date(Date.now()+86400000));
-    if(dstr===today)return'Today'; if(dstr===tom)return'Tomorrow';
-    return d.toLocaleDateString('en-KE',{weekday:'short',month:'short',day:'numeric'}); }
-  catch{ return dstr; }
+function renderTimeline() {
+  var today = new Date().toISOString().split('T')[0];
+  var todayEv = events.filter(function(e){ return e.date === today; }).sort(function(a,b){ return a.time.localeCompare(b.time); });
+  var el = document.getElementById('today-timeline');
+  if (!todayEv.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px 0;">No events today. <a href="#" style="color:var(--accent2);" onclick="openModal(\'event-modal\');return false;">Add one?</a></div>';
+    return;
+  }
+  var colorMap = {accent:'var(--accent)',green:'var(--green)',orange:'var(--orange)',red:'var(--red)'};
+  el.innerHTML = todayEv.map(function(ev, i){
+    return '<div class="tl-item"><div class="tl-time">' + ev.time + '</div><div style="display:flex;flex-direction:column;align-items:center;margin:0 6px;"><div style="width:8px;height:8px;border-radius:50%;background:' + (colorMap[ev.color]||colorMap.accent) + ';"></div><div style="width:2px;flex:1;background:var(--border);margin-top:2px;"></div></div><div class="tl-card ' + (ev.color||'') + '"><div class="tl-card-title">' + escHtml(ev.title) + '</div><div class="tl-card-sub">' + ev.duration + (ev.notes ? ' &mdash; ' + escHtml(ev.notes) : '') + '</div></div></div>';
+  }).join('');
 }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function toast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500); }
-</script>
 
-<script>
-if('serviceWorker'in navigator) addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+function renderRemindersList() {
+  var el = document.getElementById('reminders-list');
+  if (!reminders.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px 0;">No reminders. <a href="#" style="color:var(--accent2);" onclick="openModal(\'reminder-modal\');return false;">Add one?</a></div>';
+    return;
+  }
+  el.innerHTML = reminders.slice(0,6).map(function(r, i){
+    return '<div class="reminder-item"><div class="reminder-check ' + (r.done?'done':'') + '" onclick="toggleReminder(' + i + ')"></div><div style="flex:1;"><div class="reminder-text ' + (r.done?'done':'') + '">' + escHtml(r.text) + '</div><div class="reminder-due">' + r.date + '</div></div><span class="reminder-priority p-' + r.priority + '">' + r.priority + '</span></div>';
+  }).join('');
+}
+
+function renderAllReminders() {
+  var el = document.getElementById('all-reminders-list');
+  if (!reminders.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px 0;">No reminders yet. Click &ldquo;+ Add Reminder&rdquo; to create one.</div>';
+    return;
+  }
+  el.innerHTML = reminders.map(function(r, i){
+    return '<div class="reminder-item"><div class="reminder-check ' + (r.done?'done':'') + '" onclick="toggleReminder(' + i + ')"></div><div style="flex:1;"><div class="reminder-text ' + (r.done?'done':'') + '">' + escHtml(r.text) + '</div><div class="reminder-due">' + r.date + '</div></div><span class="reminder-priority p-' + r.priority + '">' + r.priority + '</span><button class="delete-btn" onclick="deleteReminder(' + i + ')" title="Delete">&#10005;</button></div>';
+  }).join('');
+}
+
+function renderUpcoming() {
+  var today = new Date().toISOString().split('T')[0];
+  var upcoming = events.filter(function(e){ return e.date >= today; }).sort(function(a,b){ return (a.date+a.time).localeCompare(b.date+b.time); }).slice(0,5);
+  var el = document.getElementById('upcoming-list');
+  if (!upcoming.length) { el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No upcoming events</div>'; return; }
+  var colorMap = {accent:'#7c6af7',green:'#34d399',orange:'#fb923c',red:'#f87171'};
+  el.innerHTML = upcoming.map(function(ev){
+    return '<div class="event-item"><div class="event-dot" style="background:' + (colorMap[ev.color]||colorMap.accent) + ';"></div><div><div class="event-title">' + escHtml(ev.title) + '</div><div class="event-time">' + ev.date + (ev.time ? ' at ' + ev.time : '') + '</div></div></div>';
+  }).join('');
+}
+
+function renderWeekView() {
+  var grid = document.getElementById('week-grid');
+  var today = new Date();
+  var weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  var days = [];
+  for (var i = 0; i < 7; i++) { var d = new Date(weekStart); d.setDate(weekStart.getDate()+i); days.push(d); }
+  var dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var html = '<div class="week-cell week-header"></div>';
+  days.forEach(function(d, i){
+    var isToday = d.toDateString() === today.toDateString();
+    html += '<div class="week-cell week-header ' + (isToday?'today-col':'') + '">' + dayNames[i] + '<br><span style="font-size:18px;font-weight:700;">' + d.getDate() + '</span></div>';
+  });
+  for (var h = 7; h <= 18; h++) {
+    var timeStr = String(h).padStart(2,'0') + ':00';
+    html += '<div class="week-cell week-time">' + timeStr + '</div>';
+    days.forEach(function(d){
+      var ds = d.toISOString().split('T')[0];
+      var slotEv = events.filter(function(e){ return e.date === ds && e.time && e.time.startsWith(String(h).padStart(2,'0')); });
+      html += '<div class="week-cell">' + slotEv.map(function(ev){ return '<div class="week-event ' + (ev.color||'') + '">' + escHtml(ev.title) + '</div>'; }).join('') + '</div>';
+    });
+  }
+  grid.innerHTML = html;
+  var allEl = document.getElementById('all-events-list');
+  if (!events.length) { allEl.innerHTML = '<div style="color:var(--muted);font-size:13px;">No events yet. Click &ldquo;+ Add Event&rdquo; to get started.</div>'; return; }
+  var colorMap = {accent:'#7c6af7',green:'#34d399',orange:'#fb923c',red:'#f87171'};
+  var sorted = events.slice().sort(function(a,b){ return (a.date+a.time).localeCompare(b.date+b.time); });
+  allEl.innerHTML = sorted.map(function(ev, i){
+    return '<div class="event-item"><div class="event-dot" style="background:' + (colorMap[ev.color]||colorMap.accent) + ';"></div><div style="flex:1;"><div class="event-title">' + escHtml(ev.title) + '</div><div class="event-time">' + ev.date + (ev.time ? ' at ' + ev.time : '') + ' &middot; ' + ev.duration + '</div></div><button class="delete-btn" onclick="deleteEvent(' + events.indexOf(ev) + ')" title="Delete">&#10005;</button></div>';
+  }).join('');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(function(m){
+  m.addEventListener('click', function(e){ if (e.target === m) m.classList.remove('open'); });
+});
+
+function saveEvent() {
+  var title = document.getElementById('ev-title').value.trim();
+  var date = document.getElementById('ev-date').value;
+  var time = document.getElementById('ev-time').value;
+  var duration = document.getElementById('ev-duration').value;
+  var color = document.getElementById('ev-color').value;
+  var notes = document.getElementById('ev-notes').value.trim();
+  if (!title || !date) { showToast('Please enter a title and date'); return; }
+  events.push({title:title,date:date,time:time,duration:duration,color:color,notes:notes});
+  localStorage.setItem('sm_events', JSON.stringify(events));
+  closeModal('event-modal');
+  document.getElementById('ev-title').value = '';
+  document.getElementById('ev-notes').value = '';
+  renderAll();
+  showToast('Event added: ' + title);
+}
+
+function saveReminder() {
+  var text = document.getElementById('rem-text').value.trim();
+  var date = document.getElementById('rem-date').value;
+  var priority = document.getElementById('rem-priority').value;
+  if (!text) { showToast('Please enter reminder text'); return; }
+  reminders.push({text:text,date:date,priority:priority,done:false});
+  localStorage.setItem('sm_reminders', JSON.stringify(reminders));
+  closeModal('reminder-modal');
+  document.getElementById('rem-text').value = '';
+  renderAll();
+  renderAllReminders();
+  showToast('Reminder added: ' + text);
+}
+
+function toggleReminder(i) {
+  reminders[i].done = !reminders[i].done;
+  localStorage.setItem('sm_reminders', JSON.stringify(reminders));
+  renderAll();
+  renderAllReminders();
+}
+function deleteReminder(i) {
+  reminders.splice(i,1);
+  localStorage.setItem('sm_reminders', JSON.stringify(reminders));
+  renderAll();
+  renderAllReminders();
+  showToast('Reminder deleted');
+}
+function deleteEvent(i) {
+  events.splice(i,1);
+  localStorage.setItem('sm_events', JSON.stringify(events));
+  renderAll();
+  showToast('Event deleted');
+}
+
+function highlightDay(dateStr) {
+  var dayEv = events.filter(function(e){ return e.date === dateStr; });
+  showToast(dayEv.length ? dayEv.length + ' event(s) on ' + dateStr : 'No events on ' + dateStr);
+}
+
+function chatKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+function sendSuggestion(el) {
+  document.getElementById('chat-input').value = el.textContent;
+  sendChat();
+}
+function sendChat() {
+  var input = document.getElementById('chat-input');
+  var msg = input.value.trim();
+  if (!msg) return;
+  addChatMsg(msg, 'user');
+  input.value = '';
+  setTimeout(function(){ addChatMsg(nebulaChatReply(msg), 'ai'); }, 600);
+}
+function addChatMsg(text, role) {
+  var el = document.getElementById('chat-messages');
+  var now = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  var div = document.createElement('div');
+  div.className = 'msg msg-' + role;
+  div.innerHTML = '<div class="msg-bubble">' + text + '</div><div class="msg-time">' + now + '</div>';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+function nebulaChatReply(msg) {
+  var m = msg.toLowerCase();
+  var today = new Date().toISOString().split('T')[0];
+  var todayEv = events.filter(function(e){ return e.date === today; });
+  if (m.includes('today') || m.includes('schedule')) {
+    return todayEv.length ? 'You have ' + todayEv.length + ' event(s) today: ' + todayEv.map(function(e){ return e.title + (e.time?' at '+e.time:''); }).join(', ') + '.' : 'Your schedule is clear today!';
+  }
+  if (m.includes('reminder')) {
+    var act = reminders.filter(function(r){ return !r.done; });
+    return act.length ? 'You have ' + act.length + ' active reminder(s): ' + act.slice(0,3).map(function(r){ return r.text; }).join(', ') + '.' : 'No active reminders.';
+  }
+  if (m.includes('next')) {
+    var up = events.filter(function(e){ return e.date >= today; }).sort(function(a,b){ return (a.date+a.time).localeCompare(b.date+b.time); });
+    return up.length ? 'Your next event is "' + up[0].title + '" on ' + up[0].date + (up[0].time?' at '+up[0].time:'') + '.' : 'No upcoming events.';
+  }
+  if (m.includes('how many') || m.includes('count')) return 'You have ' + events.length + ' event(s) and ' + reminders.length + ' reminder(s) total.';
+  return 'I can help with your schedule and reminders. Try: "today\'s schedule", "next event", or "my reminders".';
+}
+
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 2800);
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 </body>
 </html>
