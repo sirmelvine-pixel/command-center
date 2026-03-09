@@ -2,719 +2,1128 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="theme-color" content="#09090F"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#07060E"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="readable" content="no"/>
-<meta name="supported-color-schemes" content="dark"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Sir Melvine"/>
 <title>Sir Melvine · Command Center</title>
-<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
 <style>
-:root{--bg:#09090F;--s1:#0F0F18;--s2:#141420;--s3:#1C1C2C;--s4:#242438;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--gold:#F2A72B;--gold2:#FFD080;--gold-g:rgba(242,167,43,0.10);--red:#E8364A;--red-g:rgba(232,54,74,0.10);--blue:#4B8EFF;--blue-g:rgba(75,142,255,0.10);--green:#30D47A;--green-g:rgba(48,212,122,0.10);--purple:#9B6EFF;--purple-g:rgba(155,110,255,0.10);--text:#ECEEF8;--muted:#5A5C72;--muted2:#8587A2;--r:8px;--r2:14px;--r3:20px;--sw:248px;--th:56px;}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;scroll-behavior:smooth;}
-body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;}
-button{font-family:'Epilogue',sans-serif;cursor:pointer;border:none;outline:none;}
-input,select,textarea{font-family:'Epilogue',sans-serif;outline:none;}
-a{color:inherit;text-decoration:none;}
-::-webkit-scrollbar{width:3px;height:3px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--s4);border-radius:2px;}
+:root {
+  --bg:   #07060E;
+  --s1:   #0B0A16;
+  --s2:   #111020;
+  --s3:   #181628;
+  --s4:   #201E34;
+  --s5:   #2A2844;
+  --b1:   rgba(255,255,255,0.055);
+  --b2:   rgba(255,255,255,0.10);
+  --b3:   rgba(255,255,255,0.17);
 
-/* TOPBAR */
-.topbar{height:var(--th);flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;z-index:200;position:relative;}
-.menu-btn{width:32px;height:32px;border-radius:var(--r);background:none;color:var(--muted2);display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.2s;flex-shrink:0;}
-.menu-btn:hover{background:var(--s3);color:var(--text);}
-.brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;}
-.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--bg);font-weight:900;}
-.live-clock{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;letter-spacing:1px;margin-left:16px;}
-.live-clock .secs{color:var(--gold);}
-.tb-date{font-size:11px;color:var(--muted2);font-family:'JetBrains Mono',monospace;padding-left:12px;border-left:1px solid var(--border2);}
-.tb-right{display:flex;align-items:center;gap:4px;margin-left:auto;}
-.tb-btn{width:32px;height:32px;border-radius:var(--r);background:none;color:var(--muted2);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:relative;}
-.tb-btn:hover{background:var(--s3);color:var(--text);}
-.notif-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--red);border:2px solid var(--s1);}
-.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#A06010);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--bg);cursor:pointer;border:2px solid rgba(242,167,43,0.3);}
+  --gold:  #E8A838;
+  --gold2: #F5C86A;
+  --gold3: #FFEAA0;
+  --glow:  rgba(232,168,56,0.13);
+  --glow2: rgba(232,168,56,0.07);
 
-/* LAYOUT */
-.app-body{flex:1;display:flex;overflow:hidden;}
+  --red:  #E84A5F;  --red3:  rgba(232,74,95,0.12);
+  --blue: #4F8FFF;  --blue3: rgba(79,143,255,0.12);
+  --grn:  #3DCB82;  --grn3:  rgba(61,203,130,0.12);
+  --pur:  #9B72FF;  --pur3:  rgba(155,114,255,0.12);
+  --rose: #FF7B9C;
 
-/* SIDEBAR */
-.sidebar{width:var(--sw);flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width 0.28s cubic-bezier(0.4,0,0.2,1);}
-.sidebar.collapsed{width:56px;}
-.sidebar-top{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 8px;}
-.nav-group-label{font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);padding:10px 8px 6px;white-space:nowrap;overflow:hidden;transition:opacity 0.2s;}
-.sidebar.collapsed .nav-group-label{opacity:0;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:var(--r2);color:var(--muted2);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-bottom:1px;white-space:nowrap;overflow:hidden;position:relative;}
-.nav-item:hover{background:var(--s3);color:var(--text);}
-.nav-item.active{background:var(--gold-g);color:var(--gold);font-weight:600;}
-.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 2px 2px 0;background:var(--gold);}
-.nav-ico{font-size:16px;flex-shrink:0;width:22px;text-align:center;}
-.nav-txt{overflow:hidden;transition:opacity 0.2s,width 0.28s;}
-.sidebar.collapsed .nav-txt{opacity:0;width:0;}
-.nav-pill{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;flex-shrink:0;transition:opacity 0.2s;}
-.sidebar.collapsed .nav-pill{opacity:0;}
-.sidebar-bottom{padding:8px;border-top:1px solid var(--border);flex-shrink:0;}
-.collapse-btn{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:var(--r2);background:none;width:100%;color:var(--muted2);font-size:13px;font-weight:500;transition:all 0.15s;white-space:nowrap;overflow:hidden;}
-.collapse-btn:hover{background:var(--s3);color:var(--text);}
-.sidebar.collapsed .collapse-btn .nav-txt{opacity:0;width:0;}
+  --text:  #ECE8F5;
+  --dim:   #4E4C66;
+  --dim2:  #888099;
 
-/* MAIN */
-.main-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
-.page{display:none;padding:24px;flex:1;}
-.page.active{display:block;}
-.page-title{font-size:22px;font-weight:800;margin-bottom:4px;}
-.page-sub{font-size:13px;color:var(--muted2);margin-bottom:22px;}
+  --r:  8px; --r2: 14px; --r3: 20px; --r4: 28px;
+  --sw: 258px; --th: 58px; --ap: 326px;
 
-/* BENTO GRID */
-.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-.card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r3);padding:18px;transition:border-color 0.2s,transform 0.2s;}
-.card:hover{transform:translateY(-2px);}
-.card.blue{border-color:rgba(75,142,255,0.2);background:linear-gradient(135deg,var(--s2),rgba(75,142,255,0.05));}
-.card.red{border-color:rgba(232,54,74,0.2);background:linear-gradient(135deg,var(--s2),rgba(232,54,74,0.05));}
-.card.gold{border-color:rgba(242,167,43,0.2);background:linear-gradient(135deg,var(--s2),rgba(242,167,43,0.05));}
-.card.green{border-color:rgba(48,212,122,0.2);background:linear-gradient(135deg,var(--s2),rgba(48,212,122,0.05));}
-.card-ico{font-size:22px;margin-bottom:10px;}
-.card-val{font-size:32px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;}
-.card-val.blue{color:var(--blue);}
-.card-val.red{color:var(--red);}
-.card-val.gold{color:var(--gold);}
-.card-val.green{color:var(--green);}
-.card-label{font-size:11px;color:var(--muted2);margin-top:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px;}
-
-/* SECTION HEADER */
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.sec-title{font-size:14px;font-weight:700;}
-.sec-action{font-size:12px;color:var(--gold);cursor:pointer;}
-
-/* WEEK GRID */
-.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:22px;}
-.day-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);padding:10px 8px;text-align:center;}
-.day-card.today{border-color:rgba(242,167,43,0.4);background:var(--gold-g);}
-.day-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:6px;}
-.day-card.today .day-name{color:var(--gold);}
-.day-num{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:8px;}
-.day-card.today .day-num{color:var(--gold);}
-.day-rem{font-size:10px;color:var(--muted2);line-height:1.4;}
-.day-rem-item{background:var(--s3);border-radius:4px;padding:2px 5px;margin-top:3px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-/* QUICK ACTIONS */
-.quick-actions{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
-.qa-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r2);font-size:13px;font-weight:600;color:var(--text);transition:all 0.2s;}
-.qa-btn:hover{background:var(--s3);border-color:var(--gold);color:var(--gold);}
-.qa-btn .ico{font-size:16px;}
-
-/* CALENDAR */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.cal-month{font-size:18px;font-weight:800;}
-.cal-arrow{width:32px;height:32px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-.cal-arrow:hover{background:var(--s3);border-color:var(--gold);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px;}
-.cal-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:center;padding:6px 0;}
-.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;position:relative;transition:all 0.15s;}
-.cal-cell:hover{background:var(--s3);}
-.cal-cell.today{background:var(--gold);color:var(--bg);font-weight:800;}
-.cal-cell.other{color:var(--muted);}
-.cal-dot{width:4px;height:4px;border-radius:50%;background:var(--blue);position:absolute;bottom:4px;}
-.cal-cell.today .cal-dot{background:var(--bg);}
-.upcoming-list{display:flex;flex-direction:column;gap:8px;}
-.event-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);}
-.event-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.event-info{flex:1;}
-.event-title{font-size:13px;font-weight:600;}
-.event-time{font-size:11px;color:var(--muted2);margin-top:2px;}
-
-/* EMAIL */
-.email-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--s2);padding:4px;border-radius:var(--r2);border:1px solid var(--border);}
-.etab{flex:1;padding:8px;text-align:center;border-radius:var(--r);font-size:12px;font-weight:600;color:var(--muted2);cursor:pointer;transition:all 0.2s;}
-.etab.active{background:var(--s4);color:var(--text);}
-.email-list{display:flex;flex-direction:column;gap:6px;}
-.email-item{display:flex;gap:12px;padding:14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all 0.2s;}
-.email-item:hover{border-color:var(--border2);background:var(--s3);}
-.email-item.unread{border-left:3px solid var(--blue);}
-.email-avatar{width:36px;height:36px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
-.email-body{flex:1;min-width:0;}
-.email-from{font-size:13px;font-weight:600;display:flex;justify-content:space-between;}
-.email-time{font-size:11px;color:var(--muted2);font-weight:400;}
-.email-subject{font-size:12px;color:var(--muted2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-/* REMINDERS */
-.rem-form{background:var(--s2);border:1px solid var(--border);border-radius:var(--r3);padding:18px;margin-bottom:18px;}
-.rem-form-title{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--gold);}
-.form-row{display:flex;gap:10px;margin-bottom:10px;}
-.form-input{flex:1;background:var(--s3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;color:var(--text);font-size:13px;transition:border-color 0.2s;}
-.form-input:focus{border-color:var(--gold);}
-.form-input::placeholder{color:var(--muted);}
-.cat-select{background:var(--s3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;color:var(--text);font-size:13px;}
-.save-btn{padding:10px 20px;background:var(--gold);color:var(--bg);border-radius:var(--r);font-weight:700;font-size:13px;transition:all 0.2s;}
-.save-btn:hover{background:var(--gold2);}
-.rem-list{display:flex;flex-direction:column;gap:8px;}
-.rem-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);}
-.rem-cat{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;}
-.rem-cat.work{background:var(--blue-g);color:var(--blue);}
-.rem-cat.personal{background:var(--purple-g);color:var(--purple);}
-.rem-cat.health{background:var(--green-g);color:var(--green);}
-.rem-cat.urgent{background:var(--red-g);color:var(--red);}
-.rem-cat.other{background:var(--gold-g);color:var(--gold);}
-.rem-info{flex:1;}
-.rem-title{font-size:13px;font-weight:600;}
-.rem-time{font-size:11px;color:var(--muted2);margin-top:2px;font-family:'JetBrains Mono',monospace;}
-.rem-del{width:28px;height:28px;border-radius:var(--r);background:none;color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-.rem-del:hover{background:var(--red-g);color:var(--red);}
-
-/* SETTINGS */
-.settings-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r3);padding:20px;margin-bottom:16px;}
-.settings-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;}
-.profile-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
-.profile-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#A06010);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:var(--bg);}
-.profile-name{font-size:16px;font-weight:800;}
-.profile-email{font-size:12px;color:var(--muted2);margin-top:2px;}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
-.toggle-row:last-child{border-bottom:none;}
-.toggle-label{font-size:13px;font-weight:500;}
-.toggle-sub{font-size:11px;color:var(--muted2);margin-top:2px;}
-.toggle{width:40px;height:22px;border-radius:11px;background:var(--s4);position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
-.toggle.on{background:var(--gold);}
-.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform 0.2s;}
-.toggle.on::after{transform:translateX(18px);}
-
-/* AI PANEL */
-.ai-panel{width:320px;flex-shrink:0;background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;transition:width 0.28s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
-.ai-panel.hidden{width:0;}
-.aip-head{padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:10px;}
-.ai-orb{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.ai-title{font-size:13px;font-weight:700;flex:1;}
-.ai-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--green);}
-.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
-.aip-close{width:24px;height:24px;border-radius:var(--r);background:none;color:var(--muted2);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
-.aip-close:hover{background:var(--s3);color:var(--text);}
-.aip-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-.msg{max-width:85%;display:flex;flex-direction:column;gap:3px;}
-.msg.user{align-self:flex-end;align-items:flex-end;}
-.msg.bot{align-self:flex-start;align-items:flex-start;}
-.msg-bubble{padding:10px 13px;border-radius:14px;font-size:12px;line-height:1.5;}
-.msg.user .msg-bubble{background:var(--gold);color:var(--bg);border-bottom-right-radius:4px;}
-.msg.bot .msg-bubble{background:var(--s3);color:var(--text);border-bottom-left-radius:4px;}
-.msg-time{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.typing{display:flex;align-items:center;gap:4px;padding:12px 14px;background:var(--s3);border-radius:14px;border-bottom-left-radius:4px;width:fit-content;}
-.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:bounce 1.2s infinite;}
-.typing span:nth-child(2){animation-delay:0.2s;}
-.typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
-.aip-input{padding:12px;border-top:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:flex-end;}
-.aip-textarea{flex:1;background:var(--s3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 12px;color:var(--text);font-size:12px;resize:none;max-height:100px;line-height:1.5;transition:border-color 0.2s;}
-.aip-textarea:focus{border-color:var(--gold);}
-.aip-textarea::placeholder{color:var(--muted);}
-.aip-send{width:34px;height:34px;border-radius:var(--r);background:var(--gold);color:var(--bg);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
-.aip-send:hover{background:var(--gold2);}
-.aip-mic{width:34px;height:34px;border-radius:var(--r);background:var(--s3);border:1px solid var(--border2);color:var(--muted2);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;}
-.aip-mic:hover{border-color:var(--gold);color:var(--gold);}
-.aip-mic.listening{background:var(--red-g);border-color:var(--red);color:var(--red);animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
-
-/* MOBILE CHAT FAB */
-.chat-fab{display:none;position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--bg);font-size:22px;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(242,167,43,0.4);z-index:300;transition:transform 0.2s;}
-.chat-fab:hover{transform:scale(1.05);}
-
-/* MOBILE AI MODAL */
-.ai-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:400;align-items:flex-end;}
-.ai-modal.open{display:flex;}
-.ai-modal-inner{width:100%;height:85vh;background:var(--s1);border-radius:var(--r3) var(--r3) 0 0;display:flex;flex-direction:column;animation:slideUp 0.3s ease;}
-@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-
-/* BOTTOM NAV (mobile) */
-.bottom-nav{display:none;height:60px;background:var(--s1);border-top:1px solid var(--border);flex-shrink:0;align-items:center;justify-content:space-around;padding:0 8px;z-index:200;}
-.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;border-radius:var(--r);color:var(--muted2);font-size:10px;font-weight:600;cursor:pointer;transition:all 0.2s;min-width:52px;}
-.bn-item.active{color:var(--gold);}
-.bn-ico{font-size:20px;}
-.bn-label{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;}
-
-/* RESPONSIVE */
-@media(max-width:1100px){.bento{grid-template-columns:repeat(2,1fr);}.ai-panel{width:280px;}}
-@media(max-width:768px){
-  .sidebar{display:none;}
-  .ai-panel{display:none;}
-  .chat-fab{display:flex;}
-  .bottom-nav{display:flex;}
-  .tb-date{display:none;}
-  .live-clock{font-size:16px;}
-  .bento{grid-template-columns:repeat(2,1fr);}
-  .week-grid{grid-template-columns:repeat(4,1fr);}
-  .page{padding:16px;}
-  body{overflow:hidden;}
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'DM Sans', sans-serif;
+  --mono:  'JetBrains Mono', monospace;
 }
-@media(max-width:480px){.bento{grid-template-columns:1fr;}.week-grid{grid-template-columns:repeat(3,1fr);}.form-row{flex-direction:column;}}
 
-/* EMPTY STATE */
-.empty{text-align:center;padding:40px 20px;color:var(--muted2);}
-.empty-ico{font-size:40px;margin-bottom:10px;}
-.empty-txt{font-size:13px;}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; }
+body {
+  font-family:var(--sans);
+  background:var(--bg); color:var(--text);
+  height:100dvh; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+button { font-family:var(--sans); cursor:pointer; border:none; outline:none; }
+input,select,textarea { font-family:var(--sans); outline:none; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-thumb { background:var(--s5); border-radius:2px; }
+
+/* ── AMBIENT ── */
+#amb { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.orb { position:absolute; border-radius:50%; filter:blur(100px); animation:drift 26s ease-in-out infinite; }
+.o1 { width:800px;height:800px;background:var(--gold);top:-300px;right:-200px;opacity:.045;animation-duration:32s; }
+.o2 { width:500px;height:500px;background:var(--pur);bottom:-150px;left:-80px;opacity:.04;animation-duration:20s;animation-delay:-10s; }
+.o3 { width:300px;height:300px;background:var(--blue);top:55%;left:42%;opacity:.03;animation-duration:24s;animation-delay:-6s; }
+@keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-22px) scale(1.04)} 66%{transform:translate(-18px,30px) scale(.97)} }
+
+/* ── TOPBAR ── */
+.topbar {
+  height:var(--th); flex-shrink:0;
+  background:rgba(11,10,22,.93); backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--b1);
+  display:flex; align-items:center;
+  padding:0 18px; gap:12px; position:relative; z-index:200;
+}
+.tb-left { display:flex; align-items:center; gap:9px; width:var(--sw); flex-shrink:0; }
+.menu-btn {
+  width:30px;height:30px;border-radius:var(--r);
+  background:none;color:var(--dim2);font-size:18px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.menu-btn:hover { background:var(--s4); color:var(--text); }
+.brand { display:flex; align-items:center; gap:9px; }
+.brand-mark {
+  width:28px;height:28px;border-radius:8px;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:16px;font-weight:700;color:var(--bg);
+}
+.brand-name { font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:.3px; }
+.brand-name em { color:var(--gold); font-style:italic; }
+
+.tb-center { flex:1; display:flex; align-items:center; gap:14px; }
+.tb-clock { font-family:var(--mono); font-size:20px; font-weight:600; letter-spacing:1px; }
+.tb-clock .sep { color:var(--gold); animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+.tb-date { font-family:var(--mono); font-size:10px; color:var(--dim2); padding-left:12px; border-left:1px solid var(--b2); }
+
+.tb-right { display:flex; align-items:center; gap:5px; margin-left:auto; }
+.tb-btn {
+  width:30px;height:30px;border-radius:var(--r);
+  background:none;color:var(--dim2);font-size:15px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;position:relative;
+}
+.tb-btn:hover { background:var(--s4); color:var(--text); }
+.tb-btn.on { color:var(--gold); }
+.pip { position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--red);border:1.5px solid var(--s1); }
+.avatar {
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#7A4000);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:14px;font-weight:700;color:var(--bg);
+  cursor:pointer;border:2px solid rgba(232,168,56,.3);transition:border-color .2s;
+}
+.avatar:hover { border-color:var(--gold); }
+
+/* ── LAYOUT ── */
+.app-body { flex:1; display:flex; overflow:hidden; position:relative; z-index:1; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width:var(--sw); flex-shrink:0;
+  background:rgba(11,10,22,.93); backdrop-filter:blur(24px);
+  border-right:1px solid var(--b1);
+  display:flex; flex-direction:column; overflow:hidden;
+  transition:width .28s cubic-bezier(.4,0,.2,1);
+}
+.sidebar.slim { width:54px; }
+.sb-scroll { flex:1; overflow-y:auto; overflow-x:hidden; padding:14px 8px; }
+.sb-lbl {
+  font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);padding:10px 8px 5px;white-space:nowrap;overflow:hidden;transition:opacity .2s;
+}
+.sidebar.slim .sb-lbl { opacity:0; }
+.nav-item {
+  display:flex;align-items:center;gap:10px;padding:9px 8px;
+  border-radius:var(--r2);color:var(--dim2);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;position:relative;
+}
+.nav-item:hover { background:var(--s4); color:var(--text); }
+.nav-item.on { background:var(--glow2); color:var(--gold); font-weight:600; }
+.nav-item.on::before { content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:0 2px 2px 0;background:var(--gold); }
+.ni { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
+.nt { overflow:hidden; transition:opacity .2s,width .28s; }
+.sidebar.slim .nt { opacity:0; width:0; }
+.nb { margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;flex-shrink:0;transition:opacity .2s; }
+.sidebar.slim .nb { opacity:0; }
+.sb-foot { padding:8px; border-top:1px solid var(--b1); flex-shrink:0; }
+.collapse-btn {
+  display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:var(--r2);
+  background:none;width:100%;color:var(--dim2);font-size:13px;font-weight:500;
+  transition:all .15s;white-space:nowrap;overflow:hidden;
+}
+.collapse-btn:hover { background:var(--s4); color:var(--text); }
+.sidebar.slim .collapse-btn .nt { opacity:0; width:0; }
+
+/* ── MAIN ── */
+.main-wrap { flex:1; overflow-y:auto; }
+.page { display:none; padding:28px 30px; }
+.page.on { display:block; animation:pgIn .22s ease; }
+@keyframes pgIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
+
+/* ── AI PANEL ── */
+.ai-panel {
+  width:var(--ap); flex-shrink:0;
+  background:rgba(11,10,22,.96); backdrop-filter:blur(24px);
+  border-left:1px solid var(--b1);
+  display:flex; flex-direction:column;
+  transition:width .28s cubic-bezier(.4,0,.2,1); overflow:hidden;
+}
+.ai-panel.gone { width:0; }
+.aip-head {
+  padding:14px 16px 12px; flex-shrink:0;
+  border-bottom:1px solid var(--b1);
+  display:flex; align-items:center; gap:10px;
+}
+.nebula-orb {
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:conic-gradient(from 0deg,var(--gold),var(--pur),var(--blue),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  position:relative;animation:spin 8s linear infinite;
+}
+.nebula-orb::after { content:'✦';position:absolute;font-size:13px;color:#fff; }
+@keyframes spin { to{filter:hue-rotate(360deg)} }
+.aip-info { flex:1; min-width:0; }
+.aip-name { font-family:var(--serif); font-size:15px; font-weight:600; letter-spacing:.3px; }
+.aip-live { font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--grn);display:flex;align-items:center;gap:4px;margin-top:1px; }
+.live-dot { width:5px;height:5px;border-radius:50%;background:var(--grn);animation:pulse-g 2.5s ease-in-out infinite; }
+@keyframes pulse-g { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(61,203,130,.4)} 50%{opacity:.5;box-shadow:0 0 0 5px rgba(61,203,130,0)} }
+.aip-rst { width:26px;height:26px;border-radius:var(--r);background:none;color:var(--dim);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+.aip-rst:hover { background:var(--s4); color:var(--text); }
+
+.aip-msgs { flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px; }
+.msg { max-width:88%; animation:mPop .2s ease both; }
+@keyframes mPop { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+.msg.u { align-self:flex-end; }
+.msg.a { align-self:flex-start; }
+.mb { padding:9px 13px;border-radius:var(--r3);font-size:12.5px;line-height:1.65; }
+.msg.u .mb { background:var(--gold);color:var(--bg);font-weight:500;border-radius:var(--r3) var(--r3) 4px var(--r3); }
+.msg.a .mb { background:var(--s4);border:1px solid var(--b2);border-radius:4px var(--r3) var(--r3) var(--r3); }
+.thinking { display:flex;gap:5px;align-items:center;padding:11px 14px;background:var(--s4);border:1px solid var(--b2);border-radius:4px var(--r3) var(--r3) var(--r3);align-self:flex-start;animation:mPop .2s ease both; }
+.td { width:5px;height:5px;border-radius:50%;background:var(--dim2);animation:tda 1.1s ease-in-out infinite; }
+.td:nth-child(2){animation-delay:.17s}.td:nth-child(3){animation-delay:.34s}
+@keyframes tda { 0%,80%,100%{transform:translateY(0);opacity:.35} 40%{transform:translateY(-5px);opacity:1} }
+
+.chips { display:flex;flex-direction:column;gap:5px;margin-top:2px; }
+.chip { background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:7px 12px;font-size:11.5px;color:var(--dim2);text-align:left;cursor:pointer;transition:all .15s; }
+.chip:hover { background:var(--glow2);border-color:var(--glow);color:var(--text); }
+
+.aip-input-wrap { padding:10px 12px 12px;border-top:1px solid var(--b1);flex-shrink:0; }
+.aip-row { display:flex;gap:7px;align-items:flex-end; }
+.aip-ta { flex:1;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r2);color:var(--text);font-size:12.5px;padding:9px 12px;resize:none;min-height:36px;max-height:90px;line-height:1.5;transition:border-color .2s; }
+.aip-ta:focus { border-color:var(--gold); }
+.aip-ta::placeholder { color:var(--dim); }
+.send-btn { width:36px;height:36px;flex-shrink:0;border-radius:var(--r2);background:var(--gold);color:var(--bg);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s; }
+.send-btn:hover { background:var(--gold2); transform:translateY(-1px); }
+
+/* ── PAGE HEAD ── */
+.pg-head { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;gap:16px;flex-wrap:wrap; }
+.pg-h1 { font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:-.2px;line-height:1.2; }
+.pg-h1 em { color:var(--gold);font-style:italic; }
+.pg-sub { font-size:12px;color:var(--dim2);margin-top:4px; }
+.pg-acts { display:flex;gap:8px;flex-wrap:wrap;align-items:center; }
+.btn-gold { background:var(--gold);color:var(--bg);padding:9px 22px;border-radius:var(--r2);font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(232,168,56,.22);transition:all .15s; }
+.btn-gold:hover { background:var(--gold2);transform:translateY(-1px); }
+.btn-ghost { background:none;border:1px solid var(--b2);color:var(--dim2);padding:9px 18px;border-radius:var(--r2);font-size:13px;font-weight:500;transition:all .2s; }
+.btn-ghost:hover { border-color:var(--b3);color:var(--text); }
+
+/* ── CARDS ── */
+.card { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r3);padding:20px 22px;transition:border-color .2s,transform .2s;position:relative;overflow:hidden; }
+.card.click { cursor:pointer; }
+.card.click:hover { border-color:var(--b2);transform:translateY(-2px); }
+.card.click::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ca,var(--gold));transform:scaleX(0);transition:transform .25s;transform-origin:left; }
+.card.click:hover::after { transform:scaleX(1); }
+
+/* stat */
+.stat-ico { width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px;background:var(--ib,var(--glow2)); }
+.stat-n { font-family:var(--mono);font-size:38px;font-weight:600;line-height:1;letter-spacing:-1px;margin-bottom:5px;color:var(--ca,var(--gold)); }
+.stat-l { font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim2); }
+
+/* section head */
+.sec-h { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.sec-h h3 { font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.6px;color:var(--dim2);display:flex;align-items:center;gap:8px; }
+.sec-h h3::before { content:'';width:3px;height:12px;background:var(--gold);border-radius:2px; }
+.sec-btn { font-size:11px;font-weight:600;color:var(--gold);background:none;transition:opacity .2s;cursor:pointer; }
+.sec-btn:hover { opacity:.7; }
+
+/* grids */
+.g4 { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px; }
+.g2 { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px; }
+.g3 { display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:18px; }
+
+/* ── BIBLE VERSE CARD ── */
+.bible-card {
+  background:linear-gradient(135deg,rgba(232,168,56,.07),rgba(155,114,255,.05));
+  border-color:rgba(232,168,56,.2);
+  margin-bottom:18px;
+}
+.bible-inner { display:flex;gap:16px;align-items:flex-start; }
+.bible-cross { font-size:28px;flex-shrink:0;opacity:.7; }
+.bible-body { flex:1;min-width:0; }
+.bible-label { font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:8px; }
+.bible-verse {
+  font-family:var(--serif);font-size:17px;font-weight:400;font-style:italic;
+  line-height:1.7;color:var(--text);margin-bottom:8px;
+}
+.bible-ref { font-family:var(--serif);font-size:13px;font-weight:600;color:var(--gold); }
+.bible-loading { font-size:13px;color:var(--dim2);font-style:italic; }
+.bible-refresh { background:none;color:var(--dim);font-size:13px;cursor:pointer;transition:color .2s;margin-left:auto;flex-shrink:0; }
+.bible-refresh:hover { color:var(--gold); }
+
+/* ── AI SUMMARY CARD ── */
+.summary-card {
+  background:linear-gradient(135deg,rgba(79,143,255,.06),rgba(61,203,130,.04));
+  border-color:rgba(79,143,255,.18);
+  margin-bottom:18px;
+}
+.sum-head { display:flex;align-items:center;gap:10px;margin-bottom:12px; }
+.sum-orb { width:28px;height:28px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),var(--pur),var(--blue),var(--gold));display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;animation:spin 8s linear infinite; }
+.sum-title { font-family:var(--serif);font-size:15px;font-weight:600;flex:1; }
+.sum-badge { font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;background:var(--grn3);color:var(--grn);padding:3px 10px;border-radius:20px; }
+.sum-text { font-size:13px;line-height:1.75;color:var(--dim2); }
+.sum-text strong { color:var(--text);font-weight:600; }
+.sum-regen { display:flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;font-weight:600;color:var(--gold);background:none;cursor:pointer;transition:opacity .2s; }
+.sum-regen:hover { opacity:.7; }
+
+/* ── WEEKLY SUMMARY ── */
+.week-sum-card { background:linear-gradient(135deg,rgba(155,114,255,.06),rgba(232,168,56,.04));border-color:rgba(155,114,255,.18);margin-bottom:18px; }
+.ws-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.ws-title { font-family:var(--serif);font-size:15px;font-weight:600; }
+.ws-range { font-size:10px;color:var(--dim2);font-family:var(--mono); }
+.ws-body { font-size:13px;line-height:1.8;color:var(--dim2); }
+.ws-body strong { color:var(--text); }
+.ws-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px; }
+.ws-stat { background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:10px;text-align:center; }
+.ws-stat-n { font-family:var(--mono);font-size:22px;font-weight:600;color:var(--gold); }
+.ws-stat-l { font-size:9px;color:var(--dim2);text-transform:uppercase;letter-spacing:1px;margin-top:3px; }
+
+/* ── WEEK GRID ── */
+.week-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px; }
+.day-col { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 8px;min-height:90px; }
+.day-col.today { border-color:rgba(232,168,56,.35);background:linear-gradient(180deg,var(--s1),var(--glow2)); }
+.day-head { text-align:center;margin-bottom:8px; }
+.day-dn { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim2);margin-bottom:3px; }
+.day-col.today .day-dn { color:var(--gold); }
+.day-num { font-family:var(--mono);font-size:16px;font-weight:600;line-height:1; }
+.day-col.today .day-num { color:var(--gold); }
+.day-items { display:flex;flex-direction:column;gap:3px; }
+.dchip { font-size:9px;background:var(--s4);border-radius:4px;padding:2px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.45; }
+.dmore { font-size:9px;background:var(--glow2);color:var(--gold);border-radius:4px;padding:2px 5px;text-align:center; }
+.dfree { font-size:10px;color:var(--dim);text-align:center;padding-top:4px; }
+
+/* ── SCHEDULE ITEMS ── */
+.sched-item { display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);margin-bottom:7px;transition:border-color .15s; }
+.sched-item:hover { border-color:var(--b2); }
+.si-time { font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:500;min-width:42px; }
+.si-bar { width:3px;height:26px;border-radius:2px;flex-shrink:0; }
+.si-body { flex:1; }
+.si-t { font-size:13px;font-weight:500; }
+.si-n { font-size:11px;color:var(--dim);margin-top:2px; }
+.badge { font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0; }
+.bp { background:var(--red3);color:var(--red); }
+.bw { background:var(--blue3);color:var(--blue); }
+.bu { background:var(--glow2);color:var(--gold); }
+.bh { background:var(--grn3);color:var(--grn); }
+
+/* ── REMINDERS ── */
+.rem-item { display:flex;align-items:flex-start;gap:11px;padding:11px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);margin-bottom:7px;transition:border-color .15s; }
+.rem-item:hover { border-color:var(--b2); }
+.rem-cb { width:16px;height:16px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;cursor:pointer; }
+.rem-body { flex:1;min-width:0; }
+.rem-t { font-size:13px;font-weight:500; }
+.rem-t.done { text-decoration:line-through;color:var(--dim); }
+.rem-m { font-size:11px;color:var(--dim);margin-top:2px; }
+.rem-del { background:none;color:var(--dim);font-size:13px;padding:2px;border-radius:5px;flex-shrink:0;transition:color .15s;margin-top:1px; }
+.rem-del:hover { color:var(--red); }
+
+/* ── FORM ── */
+.form-card { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r3);padding:22px;margin-bottom:22px; }
+.form-title { font-family:var(--serif);font-size:15px;font-weight:600;color:var(--gold);margin-bottom:14px; }
+.frow { display:grid;gap:10px;margin-bottom:10px; }
+.f1{grid-template-columns:1fr} .f2{grid-template-columns:1fr 1fr} .f3{grid-template-columns:2fr 1fr 1fr}
+.fi { background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);color:var(--text);font-size:13px;padding:10px 14px;width:100%;transition:border-color .2s; }
+.fi:focus { border-color:var(--gold); }
+.fi::placeholder { color:var(--dim); }
+select.fi option { background:var(--bg); }
+.form-btns { display:flex;gap:8px;margin-top:4px; }
+.btn-sm { padding:9px 18px;border-radius:var(--r2);font-size:12.5px;font-weight:600; }
+.btn-s2 { background:var(--s4);color:var(--dim2);border:1px solid var(--b1); }
+
+/* ── CALENDAR ── */
+.cal-wrap { display:grid;grid-template-columns:1fr 1.1fr;gap:16px; }
+.cal-nav { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.cal-lbl { font-family:var(--serif);font-size:18px;font-weight:600; }
+.cal-arr { width:30px;height:30px;border-radius:var(--r);background:var(--s4);border:1px solid var(--b2);color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+.cal-arr:hover { border-color:var(--gold); }
+.cal-g { display:grid;grid-template-columns:repeat(7,1fr);gap:3px; }
+.cal-hd { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);text-align:center;padding:5px 0; }
+.cal-d { aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:var(--r);cursor:pointer;transition:background .12s;position:relative; }
+.cal-d:hover { background:var(--s4); }
+.cal-d.today { background:var(--gold);color:var(--bg);font-weight:700; }
+.cal-d.sel:not(.today) { border:1.5px solid var(--gold); }
+.cal-d.has::after { content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--blue); }
+.cal-d.dim { color:var(--dim);opacity:.3; }
+
+/* ── EMAIL ── */
+.email-card { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r3);padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:10px;transition:border-color .2s; }
+.email-card:hover { border-color:var(--b2); }
+.email-ico { width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:18px;font-weight:700;flex-shrink:0; }
+.email-info { flex:1; }
+.email-n { font-size:14px;font-weight:600; }
+.email-a { font-size:11px;color:var(--dim);margin-top:2px; }
+.pip-wrap { display:flex;align-items:center;gap:6px; }
+.epip { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+.epip.on { background:var(--grn);box-shadow:0 0 8px rgba(61,203,130,.5); }
+.epip.off { background:var(--rose); }
+.epip-lbl { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px; }
+.epip-lbl.on { color:var(--grn); }
+.epip-lbl.off { color:var(--rose); }
+
+/* ── SETTINGS ── */
+.sets-g { margin-bottom:26px; }
+.sets-g-title { font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:10px; }
+.tog-row { background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;transition:border-color .15s;cursor:pointer; }
+.tog-row:hover { border-color:var(--b2); }
+.tog-l { font-size:13px;font-weight:500;margin-bottom:2px; }
+.tog-s { font-size:11px;color:var(--dim); }
+.tsw { position:relative;width:42px;height:22px;flex-shrink:0; }
+.tsw input { display:none; }
+.tsl { position:absolute;inset:0;background:var(--s5);border-radius:22px;cursor:pointer;transition:background .25s; }
+.tsl::before { content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .25s; }
+.tsw input:checked+.tsl { background:var(--gold); }
+.tsw input:checked+.tsl::before { transform:translateX(20px); }
+
+/* ── EMPTY ── */
+.empty { text-align:center;padding:36px 16px;color:var(--dim);font-size:13px; }
+.empty-ico { font-size:32px;margin-bottom:10px;opacity:.4; }
+
+/* ── TOAST ── */
+.toast { position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--s4);border:1px solid var(--b2);border-radius:var(--r3);padding:10px 20px;font-size:13px;font-weight:500;box-shadow:0 8px 40px rgba(0,0,0,.5);z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap; }
+.toast.show { opacity:1; }
+
+/* ── MOBILE ── */
+.mob-fab { display:none;position:fixed;bottom:72px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--bg);font-size:20px;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(232,168,56,.45);z-index:300;transition:transform .2s; }
+.mob-fab:hover { transform:scale(1.06); }
+.bot-nav { display:none;height:58px;flex-shrink:0;background:rgba(11,10,22,.96);backdrop-filter:blur(24px);border-top:1px solid var(--b1);align-items:center;justify-content:space-around;padding:0 8px;z-index:200; }
+.bn-item { display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border-radius:var(--r);color:var(--dim2);cursor:pointer;transition:color .2s;min-width:52px; }
+.bn-item.on { color:var(--gold); }
+.bn-ico { font-size:20px; }
+.bn-lbl { font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1280px){:root{--ap:288px} .g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1024px){.ai-panel{display:none} .mob-fab{display:flex} .week-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){
+  .sidebar{display:none} .bot-nav{display:flex}
+  .page{padding:16px}
+  .g2,.g3,.cal-wrap{grid-template-columns:1fr}
+  .f3{grid-template-columns:1fr 1fr}
+  .week-grid{grid-template-columns:repeat(3,1fr)}
+  .tb-date{display:none} .brand-name{display:none}
+  :root{--sw:0px}
+}
+@media(max-width:480px){.g4{grid-template-columns:1fr 1fr} .week-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
-<body role="application" aria-label="Sir Melvine Command Center">
+<body>
 
-<!-- TOPBAR -->
+<div id="amb"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+
+<!-- ══ TOPBAR ══ -->
 <div class="topbar">
-  <button class="menu-btn" onclick="toggleSidebar()" title="Toggle menu">&#9776;</button>
-  <div class="brand">
-    <div class="brand-mark">M</div>
-    <span class="tb-brand-txt">Command Center</span>
+  <div class="tb-left">
+    <button class="menu-btn" onclick="toggleSB()">☰</button>
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-name">Sir <em>Melvine</em></div>
+    </div>
   </div>
-  <div class="live-clock" id="clock"><span class="hrs">00</span>:<span class="mins">00</span>:<span class="secs">00</span></div>
-  <div class="tb-date" id="tbDate"></div>
+  <div class="tb-center">
+    <div class="tb-clock"><span id="ch">00</span><span class="sep">:</span><span id="cm">00</span><span class="sep">:</span><span id="cs">00</span></div>
+    <div class="tb-date" id="tbDate"></div>
+  </div>
   <div class="tb-right">
-    <button class="tb-btn" onclick="toggleAI()" title="AI Assistant">&#129302;<div class="notif-dot" id="aiDot"></div></button>
-    <button class="tb-btn" title="Notifications">&#128276;<div class="notif-dot on"></div></button>
+    <button class="tb-btn on" id="aiBtn" onclick="toggleAI()">✦<div class="pip"></div></button>
+    <button class="tb-btn" id="bellBtn" onclick="reqNotif()">🔔</button>
     <div class="avatar">M</div>
   </div>
 </div>
 
-<!-- APP BODY -->
+<!-- ══ APP ══ -->
 <div class="app-body">
 
   <!-- SIDEBAR -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-top">
-      <div class="nav-group-label">Main</div>
-      <div class="nav-item active" onclick="showPage('home',this)"><span class="nav-ico">&#127968;</span><span class="nav-txt">Home</span></div>
-      <div class="nav-item" onclick="showPage('calendar',this)"><span class="nav-ico">&#128197;</span><span class="nav-txt">Calendar</span></div>
-      <div class="nav-item" onclick="showPage('emails',this)"><span class="nav-ico">&#9993;</span><span class="nav-txt">Emails</span><span class="nav-pill" id="emailBadge">3</span></div>
-      <div class="nav-item" onclick="showPage('reminders',this)"><span class="nav-ico">&#9201;</span><span class="nav-txt">Reminders</span></div>
-      <div class="nav-group-label" style="margin-top:12px;">System</div>
-      <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-ico">&#9881;</span><span class="nav-txt">Settings</span></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-scroll">
+      <div class="sb-lbl">Overview</div>
+      <div class="nav-item on" id="nav-home" onclick="go('home')"><span class="ni">⬛</span><span class="nt">Dashboard</span></div>
+      <div class="nav-item" id="nav-calendar" onclick="go('calendar')"><span class="ni">📅</span><span class="nt">Calendar</span></div>
+      <div class="sb-lbl" style="margin-top:8px">Tasks</div>
+      <div class="nav-item" id="nav-reminders" onclick="go('reminders')"><span class="ni">✔</span><span class="nt">Reminders</span><span class="nb" id="remBadge" style="display:none">0</span></div>
+      <div class="sb-lbl" style="margin-top:8px">Communication</div>
+      <div class="nav-item" id="nav-emails" onclick="go('emails')"><span class="ni">✉</span><span class="nt">Emails</span></div>
+      <div class="sb-lbl" style="margin-top:8px">System</div>
+      <div class="nav-item" id="nav-settings" onclick="go('settings')"><span class="ni">⚙</span><span class="nt">Settings</span></div>
     </div>
-    <div class="sidebar-bottom">
-      <button class="collapse-btn" onclick="toggleSidebar()">
-        <span class="nav-ico" id="collapseIco">&#171;</span>
-        <span class="nav-txt">Collapse</span>
-      </button>
+    <div class="sb-foot">
+      <button class="collapse-btn" onclick="toggleSB()"><span class="ni">◀</span><span class="nt">Collapse</span></button>
     </div>
-  </div>
+  </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <div class="main-wrap">
 
-    <!-- HOME PAGE -->
-    <div class="page active" id="page-home">
-      <div class="page-title" id="greeting">Good day, Sir Melvine</div>
-      <div class="page-sub" id="homeDate">Loading date...</div>
-      <div class="bento">
-        <div class="card blue"><div class="card-ico">&#128197;</div><div class="card-val blue" id="statEvents">2</div><div class="card-label">Today's Events</div></div>
-        <div class="card red"><div class="card-ico">&#9993;</div><div class="card-val red" id="statEmails">3</div><div class="card-label">Unread Emails</div></div>
-        <div class="card gold"><div class="card-ico">&#9201;</div><div class="card-val gold" id="statReminders">0</div><div class="card-label">Reminders</div></div>
-        <div class="card green"><div class="card-ico">&#128276;</div><div class="card-val green" id="statNext">9AM</div><div class="card-label">Next Briefing</div></div>
+    <!-- ── DASHBOARD ── -->
+    <div class="page on" id="page-home">
+      <div class="pg-head">
+        <div>
+          <div class="pg-h1">Good <em id="greeting">Morning</em>, Sir Melvine 👑</div>
+          <div class="pg-sub" id="fullDate"></div>
+        </div>
+        <div class="pg-acts">
+          <button class="btn-gold" onclick="go('reminders')">+ Add Reminder</button>
+          <button class="btn-ghost" onclick="go('calendar')">Calendar</button>
+        </div>
       </div>
-      <div class="quick-actions">
-        <button class="qa-btn" onclick="showPage('reminders',null)"><span class="ico">&#43;</span> Add Reminder</button>
-        <button class="qa-btn" onclick="showPage('emails',null)"><span class="ico">&#9993;</span> Check Emails</button>
-        <button class="qa-btn" onclick="toggleAI()"><span class="ico">&#129302;</span> Ask Nebula</button>
-        <button class="qa-btn" onclick="showPage('calendar',null)"><span class="ico">&#128197;</span> Calendar</button>
+
+      <!-- HERO BANNER -->
+      <div style="position:relative;border-radius:var(--r3);overflow:hidden;margin-bottom:18px;min-height:220px;background:#0a0812;">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80&auto=format&fit=crop"
+          onerror="this.src='https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1400&q=80&auto=format&fit=crop'"
+          alt="Sunset" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:.65;display:block;"/>
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(7,6,14,.85) 0%,rgba(7,6,14,.3) 60%,transparent 100%);"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(7,6,14,.7) 0%,transparent 50%);"></div>
+        <div style="position:relative;z-index:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:flex-end;min-height:220px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:18px">🌅</span>
+            <span style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)" id="heroBriefLabel">Good Morning</span>
+          </div>
+          <div style="font-family:var(--serif);font-size:38px;font-weight:600;line-height:1.1;letter-spacing:-.5px;margin-bottom:6px" id="heroDate">Monday, March 9, 2026</div>
+          <div style="font-size:13px;color:rgba(236,232,245,.65)" id="heroSub">Loading your day…</div>
+        </div>
       </div>
-      <div class="sec-head"><div class="sec-title">&#128197; Week at a Glance</div></div>
+
+      <!-- BIBLE VERSE -->
+      <div class="card bible-card">
+        <div class="bible-inner">
+          <div class="bible-cross">✝️</div>
+          <div class="bible-body">
+            <div class="bible-label">Verse of the Day</div>
+            <div class="bible-verse" id="bibleVerse"><span class="bible-loading">Loading today's verse…</span></div>
+            <div class="bible-ref" id="bibleRef"></div>
+          </div>
+          <button class="bible-refresh" onclick="loadBibleVerse()" title="New verse">↺</button>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="g4">
+        <div class="card click" style="--ca:var(--gold);--ib:var(--glow2)" onclick="go('reminders')">
+          <div class="stat-ico">📋</div><div class="stat-n" id="stToday">0</div><div class="stat-l">Due Today</div>
+        </div>
+        <div class="card click" style="--ca:var(--grn);--ib:var(--grn3)" onclick="go('reminders')">
+          <div class="stat-ico">✅</div><div class="stat-n" id="stDone">0</div><div class="stat-l">Completed</div>
+        </div>
+        <div class="card click" style="--ca:var(--blue);--ib:var(--blue3)" onclick="go('calendar')">
+          <div class="stat-ico">📅</div><div class="stat-n" id="stWeek">0</div><div class="stat-l">This Week</div>
+        </div>
+        <div class="card click" style="--ca:var(--pur);--ib:var(--pur3)" onclick="go('reminders')">
+          <div class="stat-ico">🗂</div><div class="stat-n" id="stTotal">0</div><div class="stat-l">All Reminders</div>
+        </div>
+      </div>
+
+      <!-- AI DAILY SUMMARY -->
+      <div class="card summary-card">
+        <div class="sum-head">
+          <div class="sum-orb"></div>
+          <div class="sum-title">Today's AI Briefing</div>
+          <span class="sum-badge" id="sumBadge">Live</span>
+        </div>
+        <div class="sum-text" id="sumText"><span style="color:var(--dim);font-style:italic">Generating your briefing…</span></div>
+        <button class="sum-regen" onclick="genDailySummary()">↺ Regenerate</button>
+      </div>
+
+      <!-- WEEK AT A GLANCE -->
+      <div class="sec-h"><h3>Week at a Glance</h3><button class="sec-btn" onclick="go('calendar')">Full Calendar →</button></div>
       <div class="week-grid" id="weekGrid"></div>
+
+      <!-- WEEKLY AI SUMMARY -->
+      <div class="card week-sum-card">
+        <div class="ws-head">
+          <div class="ws-title">📊 Weekly Summary</div>
+          <div class="ws-range" id="wsRange"></div>
+        </div>
+        <div class="ws-stats">
+          <div class="ws-stat"><div class="ws-stat-n" id="wsDue">0</div><div class="ws-stat-l">Due</div></div>
+          <div class="ws-stat"><div class="ws-stat-n" id="wsDone">0</div><div class="ws-stat-l">Done</div></div>
+          <div class="ws-stat"><div class="ws-stat-n" id="wsUrg">0</div><div class="ws-stat-l">Urgent</div></div>
+        </div>
+        <div class="ws-body" id="wsText" style="margin-top:14px"><span style="color:var(--dim);font-style:italic">Generating weekly summary…</span></div>
+        <button class="sum-regen" onclick="genWeeklySummary()">↺ Regenerate</button>
+      </div>
+
+      <!-- TODAY + UPCOMING -->
+      <div class="g2">
+        <div class="card" style="padding:20px">
+          <div class="sec-h"><h3>Today's Schedule</h3><button class="sec-btn" onclick="go('calendar')">→</button></div>
+          <div id="todaySched"></div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="sec-h"><h3>Upcoming</h3><button class="sec-btn" onclick="go('reminders')">→</button></div>
+          <div id="upcomingList"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- CALENDAR PAGE -->
+    <!-- ── CALENDAR ── -->
     <div class="page" id="page-calendar">
-      <div class="page-title">Calendar</div>
-      <div class="page-sub">Manage your schedule</div>
-      <div class="cal-nav">
-        <button class="cal-arrow" onclick="changeMonth(-1)">&#8249;</button>
-        <div class="cal-month" id="calMonth"></div>
-        <button class="cal-arrow" onclick="changeMonth(1)">&#8250;</button>
-      </div>
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="sec-head"><div class="sec-title">&#128197; Upcoming Events</div></div>
-      <div class="upcoming-list">
-        <div class="event-item"><div class="event-dot" style="background:var(--blue)"></div><div class="event-info"><div class="event-title">Daily Morning Briefing</div><div class="event-time">Every day · 9:00 AM EAT</div></div></div>
-        <div class="event-item"><div class="event-dot" style="background:var(--green)"></div><div class="event-info"><div class="event-title">Team Standup</div><div class="event-time">Monday, Wednesday, Friday · 10:00 AM</div></div></div>
-        <div class="event-item"><div class="event-dot" style="background:var(--gold)"></div><div class="event-info"><div class="event-title">Weekly Review</div><div class="event-time">Friday · 4:00 PM</div></div></div>
+      <div class="pg-head"><div><div class="pg-h1">📅 Calendar</div><div class="pg-sub">Your full schedule</div></div></div>
+      <div class="cal-wrap">
+        <div class="card" style="padding:22px">
+          <div class="cal-nav">
+            <button class="cal-arr" onclick="chMon(-1)">‹</button>
+            <div class="cal-lbl" id="calLbl"></div>
+            <button class="cal-arr" onclick="chMon(1)">›</button>
+          </div>
+          <div class="cal-g" id="calGrid"></div>
+        </div>
+        <div class="card" style="padding:22px">
+          <div class="sec-h"><h3 id="calDayTitle">Events</h3></div>
+          <div id="calDayList"></div>
+        </div>
       </div>
     </div>
 
-    <!-- EMAILS PAGE -->
-    <div class="page" id="page-emails">
-      <div class="page-title">Emails</div>
-      <div class="page-sub">Gmail &amp; Zoho Work</div>
-      <div class="email-tabs">
-        <div class="etab active" onclick="switchEmailTab(this,'gmail')">&#128140; Gmail (Personal)</div>
-        <div class="etab" onclick="switchEmailTab(this,'zoho')">&#128188; Zoho (Work)</div>
-      </div>
-      <div id="emailTabContent"></div>
-    </div>
-
-    <!-- REMINDERS PAGE -->
+    <!-- ── REMINDERS ── -->
     <div class="page" id="page-reminders">
-      <div class="page-title">Reminders</div>
-      <div class="page-sub">Stay on top of everything</div>
-      <div class="rem-form">
-        <div class="rem-form-title">&#43; New Reminder</div>
-        <div class="form-row">
-          <input class="form-input" id="remTitle" type="text" placeholder="Reminder title..."/>
-          <input class="form-input" id="remDate" type="datetime-local"/>
+      <div class="pg-head"><div><div class="pg-h1">✔ Reminders</div><div class="pg-sub">Your personal task list</div></div></div>
+      <div class="form-card">
+        <div class="form-title">+ New Reminder</div>
+        <div class="frow f1"><input class="fi" id="rTitle" placeholder="Reminder title…"/></div>
+        <div class="frow f3">
+          <input class="fi" id="rDate" type="date"/>
+          <input class="fi" id="rTime" type="time"/>
+          <select class="fi" id="rCat"><option value="Personal">Personal</option><option value="Work">Work</option><option value="Urgent">Urgent</option><option value="Health">Health</option></select>
         </div>
-        <div class="form-row">
-          <select class="form-input cat-select" id="remCat">
-            <option value="work">Work</option>
-            <option value="personal">Personal</option>
-            <option value="health">Health</option>
-            <option value="urgent">Urgent</option>
-            <option value="other">Other</option>
-          </select>
-          <button class="save-btn" onclick="addReminder()">Save Reminder</button>
+        <div class="frow f1"><input class="fi" id="rNote" placeholder="Notes (optional)…"/></div>
+        <div class="form-btns">
+          <button class="btn-gold btn-sm" onclick="addRem()">Add Reminder</button>
+          <button class="btn-s2 btn-sm" onclick="clrForm()">Clear</button>
         </div>
       </div>
-      <div class="sec-head"><div class="sec-title">&#9201; Your Reminders</div></div>
-      <div class="rem-list" id="remList"></div>
+      <div class="sec-h"><h3>All Reminders</h3></div>
+      <div id="allRem"></div>
     </div>
 
-    <!-- SETTINGS PAGE -->
+    <!-- ── EMAILS ── -->
+    <div class="page" id="page-emails">
+      <div class="pg-head"><div><div class="pg-h1">✉ Email Accounts</div><div class="pg-sub">Connected mail accounts</div></div></div>
+      <div class="email-card">
+        <div class="email-ico" style="background:rgba(234,67,53,.13);color:#EA4335">G</div>
+        <div class="email-info"><div class="email-n">Gmail — Personal</div><div class="email-a">melvine@gmail.com</div></div>
+        <div class="pip-wrap"><div class="epip on"></div><span class="epip-lbl on">Connected</span></div>
+      </div>
+      <div class="email-card">
+        <div class="email-ico" style="background:rgba(79,143,255,.13);color:var(--blue)">Z</div>
+        <div class="email-info"><div class="email-n">Zoho Mail — Work</div><div class="email-a">sir.melvine@zohomail.com</div></div>
+        <div class="pip-wrap"><div class="epip off"></div><span class="epip-lbl off">Pending</span></div>
+      </div>
+      <div class="card" style="margin-top:20px;background:var(--glow2);border-color:var(--glow)">
+        <div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--gold);margin-bottom:8px">💡 Ask Nebula about your emails</div>
+        <div style="font-size:12.5px;color:var(--dim2);line-height:1.8">
+          Press ✦ and try:<br>
+          <code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.3);padding:2px 7px;border-radius:5px">"Draft an email to the team about tomorrow's meeting"</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
     <div class="page" id="page-settings">
-      <div class="page-title">Settings</div>
-      <div class="page-sub">Preferences &amp; account</div>
-      <div class="settings-card">
-        <div class="settings-title">&#128100; Profile</div>
-        <div class="profile-row"><div class="profile-avatar">M</div><div><div class="profile-name">Sir Melvine</div><div class="profile-email">sirmelvine@gmail.com</div><div class="profile-email">melvin.mwesigwa@unisontalentmanagement.com</div></div></div>
+      <div class="pg-head"><div><div class="pg-h1">⚙ Settings</div><div class="pg-sub">Manage your preferences</div></div></div>
+      <div class="sets-g">
+        <div class="sets-g-title">Notifications</div>
+        <div class="tog-row"><div><div class="tog-l">Daily Briefing</div><div class="tog-s">Morning summary at 9:00 AM EAT</div></div><label class="tsw"><input type="checkbox" id="togBriefing" checked onchange="saveSetting('briefing',this.checked)"/><div class="tsl"></div></label></div>
+        <div class="tog-row"><div><div class="tog-l">Reminder Alerts</div><div class="tog-s">Push at reminder time</div></div><label class="tsw"><input type="checkbox" id="togAlerts" checked onchange="saveSetting('alerts',this.checked)"/><div class="tsl"></div></label></div>
+        <div class="tog-row"><div><div class="tog-l">10-Minute Warning</div><div class="tog-s">Early heads-up before reminders</div></div><label class="tsw"><input type="checkbox" id="tog10" checked onchange="saveSetting('warn10',this.checked)"/><div class="tsl"></div></label></div>
       </div>
-      <div class="settings-card">
-        <div class="settings-title">&#128276; Notifications</div>
-        <div class="toggle-row"><div><div class="toggle-label">Morning Briefing</div><div class="toggle-sub">Daily email at 9:00 AM EAT</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-        <div class="toggle-row"><div><div class="toggle-label">Reminder Alerts</div><div class="toggle-sub">10 min before each reminder</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-        <div class="toggle-row"><div><div class="toggle-label">Email Notifications</div><div class="toggle-sub">New emails from both accounts</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
-      </div>
-      <div class="settings-card">
-        <div class="settings-title">&#129302; Nebula Assistant</div>
-        <div class="toggle-row"><div><div class="toggle-label">AI Panel</div><div class="toggle-sub">Show assistant panel on desktop</div></div><div class="toggle on" onclick="toggleAI()"></div></div>
-        <div class="toggle-row"><div><div class="toggle-label">Voice Input</div><div class="toggle-sub">Use microphone for voice commands</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sets-g">
+        <div class="sets-g-title">Application</div>
+        <div class="tog-row" onclick="installPWA()"><div><div class="tog-l">📲 Install to Home Screen</div><div class="tog-s">Add as native app</div></div><span style="color:var(--gold);font-size:20px">›</span></div>
+        <div class="tog-row" onclick="reqNotif()"><div><div class="tog-l">🔔 Enable Push Notifications</div><div class="tog-s">Required for briefings and reminders</div></div><span style="color:var(--gold);font-size:20px">›</span></div>
       </div>
     </div>
 
-  </div><!-- end main-wrap -->
+  </div><!-- /main-wrap -->
 
-  <!-- AI PANEL (desktop) -->
+  <!-- ══ NEBULA AI ══ -->
   <div class="ai-panel" id="aiPanel">
     <div class="aip-head">
-      <div class="ai-orb">&#129302;</div>
-      <div>
-        <div class="ai-title">Nebula Assistant</div>
-        <div class="ai-status"><div class="ai-dot"></div>Online</div>
+      <div class="nebula-orb"></div>
+      <div class="aip-info">
+        <div class="aip-name">Nebula</div>
+        <div class="aip-live"><div class="live-dot"></div>Online</div>
       </div>
-      <button class="aip-close" onclick="toggleAI()">&#10005;</button>
+      <button class="aip-rst" onclick="resetAI()">↺</button>
     </div>
-    <div class="aip-msgs" id="aiMsgs"></div>
-    <div class="aip-input">
-      <textarea class="aip-textarea" id="aiInput" placeholder="Ask Nebula anything..." rows="1" onkeydown="aiKeydown(event)" oninput="autoResize(this)"></textarea>
-      <button class="aip-mic" id="micBtn" onclick="toggleVoice()" title="Voice input">&#127908;</button>
-      <button class="aip-send" onclick="sendAIMsg()" title="Send">&#10148;</button>
+    <div class="aip-msgs" id="aipMsgs">
+      <div class="msg a"><div class="mb">Peace be with you, Sir Melvine 🙏<br><br>I'm Nebula — your AI command assistant. I have full context on your schedule and reminders. What do you need?</div></div>
+      <div class="chips" id="chips">
+        <button class="chip" onclick="chipSend(this)">📋 Summarise my day</button>
+        <button class="chip" onclick="chipSend(this)">📅 What's due this week?</button>
+        <button class="chip" onclick="chipSend(this)">✝️ Give me a devotional thought</button>
+        <button class="chip" onclick="chipSend(this)">⚠️ Any urgent items?</button>
+      </div>
     </div>
-  </div>
-
-</div><!-- end app-body -->
-
-<!-- BOTTOM NAV (mobile) -->
-<div class="bottom-nav" id="bottomNav">
-  <div class="bn-item active" onclick="showPage('home',this,true)"><div class="bn-ico">&#127968;</div><div class="bn-label">Home</div></div>
-  <div class="bn-item" onclick="showPage('calendar',this,true)"><div class="bn-ico">&#128197;</div><div class="bn-label">Calendar</div></div>
-  <div class="bn-item" onclick="showPage('emails',this,true)"><div class="bn-ico">&#9993;</div><div class="bn-label">Emails</div></div>
-  <div class="bn-item" onclick="showPage('reminders',this,true)"><div class="bn-ico">&#9201;</div><div class="bn-label">Reminders</div></div>
-  <div class="bn-item" onclick="showPage('settings',this,true)"><div class="bn-ico">&#9881;</div><div class="bn-label">Settings</div></div>
-</div>
-
-<!-- CHAT FAB (mobile) -->
-<button class="chat-fab" onclick="openMobileAI()">&#129302;</button>
-
-<!-- AI MODAL (mobile) -->
-<div class="ai-modal" id="aiModal" onclick="closeMobileAI(event)">
-  <div class="ai-modal-inner">
-    <div class="aip-head">
-      <div class="ai-orb">&#129302;</div>
-      <div><div class="ai-title">Nebula Assistant</div><div class="ai-status"><div class="ai-dot"></div>Online</div></div>
-      <button class="aip-close" onclick="closeMobileAI()">&#10005;</button>
-    </div>
-    <div class="aip-msgs" id="aiMsgsMobile"></div>
-    <div class="aip-input">
-      <textarea class="aip-textarea" id="aiInputMobile" placeholder="Ask Nebula anything..." rows="1" onkeydown="aiKeydownMobile(event)" oninput="autoResize(this)"></textarea>
-      <button class="aip-mic" id="micBtnMobile" onclick="toggleVoiceMobile()" title="Voice input">&#127908;</button>
-      <button class="aip-send" onclick="sendAIMsgMobile()" title="Send">&#10148;</button>
+    <div class="aip-input-wrap">
+      <div class="aip-row">
+        <textarea class="aip-ta" id="aipTa" placeholder="Ask Nebula…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
+        <button class="send-btn" onclick="sendAI()">➤</button>
+      </div>
     </div>
   </div>
+
+</div><!-- /app-body -->
+
+<button class="mob-fab" onclick="toggleAI()">✦</button>
+<div class="bot-nav">
+  <div class="bn-item on" id="bn-home" onclick="go('home')"><div class="bn-ico">⬛</div><div class="bn-lbl">Home</div></div>
+  <div class="bn-item" id="bn-calendar" onclick="go('calendar')"><div class="bn-ico">📅</div><div class="bn-lbl">Cal</div></div>
+  <div class="bn-item" id="bn-reminders" onclick="go('reminders')"><div class="bn-ico">✔</div><div class="bn-lbl">Tasks</div></div>
+  <div class="bn-item" id="bn-emails" onclick="go('emails')"><div class="bn-ico">✉</div><div class="bn-lbl">Email</div></div>
+  <div class="bn-item" id="bn-settings" onclick="go('settings')"><div class="bn-ico">⚙</div><div class="bn-lbl">More</div></div>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ── CLOCK ──
-function updateClock(){
-  const now=new Date();
-  const h=String(now.getHours()).padStart(2,'0');
-  const m=String(now.getMinutes()).padStart(2,'0');
-  const s=String(now.getSeconds()).padStart(2,'0');
-  document.querySelector('#clock .hrs').textContent=h;
-  document.querySelector('#clock .mins').textContent=m;
-  document.querySelector('#clock .secs').textContent=s;
-}
-setInterval(updateClock,1000);updateClock();
+/* ══ STATE ══ */
+let rems = JSON.parse(localStorage.getItem('sm_rem')||'[]');
+let sets = JSON.parse(localStorage.getItem('sm_set')||'{"briefing":true,"alerts":true,"warn10":true}');
+let calY, calM, calSel, sbSlim=false, aiGone=false, dInstall=null, chatHist=[];
 
-// ── DATE ──
-function updateDate(){
-  const now=new Date();
-  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const d=days[now.getDay()];const mo=months[now.getMonth()];const dt=now.getDate();const yr=now.getFullYear();
-  document.getElementById('tbDate').textContent=`${d}, ${mo} ${dt}`;
-  document.getElementById('homeDate').textContent=`${d}, ${mo} ${dt}, ${yr}`;
-  // greeting
-  const hr=now.getHours();
-  let g='Good evening';if(hr<12)g='Good morning';else if(hr<17)g='Good afternoon';
-  document.getElementById('greeting').textContent=`${g}, Sir Melvine`;
-}
-updateDate();
+/* ══ BIBLE VERSES (offline fallback pool) ══ */
+const VERSES = [
+  {v:"For I know the plans I have for you, declares the LORD, plans to prosper you and not to harm you, plans to give you hope and a future.",r:"Jeremiah 29:11"},
+  {v:"I can do all this through him who gives me strength.",r:"Philippians 4:13"},
+  {v:"The LORD is my shepherd, I lack nothing.",r:"Psalm 23:1"},
+  {v:"Trust in the LORD with all your heart and lean not on your own understanding.",r:"Proverbs 3:5"},
+  {v:"Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.",r:"Joshua 1:9"},
+  {v:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",r:"Romans 8:28"},
+  {v:"The name of the LORD is a fortified tower; the righteous run to it and are safe.",r:"Proverbs 18:10"},
+  {v:"Come to me, all you who are weary and burdened, and I will give you rest.",r:"Matthew 11:28"},
+  {v:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"Matthew 6:33"},
+  {v:"Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged.",r:"Joshua 1:9"},
+  {v:"The LORD your God is with you, the Mighty Warrior who saves. He will take great delight in you.",r:"Zephaniah 3:17"},
+  {v:"Commit to the LORD whatever you do, and he will establish your plans.",r:"Proverbs 16:3"},
+  {v:"For it is by grace you have been saved, through faith — and this is not from yourselves, it is the gift of God.",r:"Ephesians 2:8"},
+  {v:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",r:"Philippians 4:6"},
+];
 
-// ── SIDEBAR ──
-let sidebarCollapsed=false;
-function toggleSidebar(){
-  sidebarCollapsed=!sidebarCollapsed;
-  document.getElementById('sidebar').classList.toggle('collapsed',sidebarCollapsed);
-  document.getElementById('collapseIco').innerHTML=sidebarCollapsed?'&#187;':'&#171;';
+/* ══ BOOT ══ */
+addEventListener('load', ()=>{
+  const n = new Date();
+  calY=n.getFullYear(); calM=n.getMonth(); calSel=new Date(n);
+  tick(); setInterval(tick,1000);
+  renderHome(); renderCal(); renderAllRem(); updBadge();
+  schedAll(); schedBriefing(); loadSets(); updBriefingNxt(); setInterval(updBriefingNxt,60000);
+  document.getElementById('rDate').value = ds(n);
+  document.getElementById('greeting').textContent = n.getHours()<12?'Morning':n.getHours()<17?'Afternoon':'Evening';
+  loadBibleVerse();
+  genDailySummary();
+  genWeeklySummary();
+});
+addEventListener('beforeinstallprompt', e=>{e.preventDefault();dInstall=e;});
+
+/* ══ CLOCK ══ */
+function tick(){
+  const n=new Date(), p=x=>String(x).padStart(2,'0'), h=n.getHours();
+  document.getElementById('ch').textContent=p(h);
+  document.getElementById('cm').textContent=p(n.getMinutes());
+  document.getElementById('cs').textContent=p(n.getSeconds());
+  document.getElementById('tbDate').textContent=n.toLocaleDateString('en-KE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const g=document.getElementById('greeting'); if(g) g.textContent=h<12?'Morning':h<17?'Afternoon':'Evening';
+  const fd=document.getElementById('fullDate'); if(fd) fd.textContent=n.toLocaleDateString('en-KE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  const hl=document.getElementById('heroBriefLabel'); if(hl) hl.textContent=h<12?'Good Morning':h<17?'Good Afternoon':'Good Evening';
 }
 
-// ── PAGES ──
-function showPage(name,el,isMobile){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(!isMobile){
-    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-    if(el)el.classList.add('active');
+/* ══ BIBLE VERSE ══ */
+async function loadBibleVerse(){
+  const vEl=document.getElementById('bibleVerse'), rEl=document.getElementById('bibleRef');
+  vEl.innerHTML='<span class="bible-loading">Loading today\'s verse…</span>';
+  rEl.textContent='';
+  // Try API.Bible free endpoint
+  try {
+    const res = await fetch('https://beta.ourmanna.com/api/v1/get?format=json&order=daily');
+    if(res.ok){
+      const d = await res.json();
+      const verse = d.verse?.details?.text || d.verse?.details?.reference;
+      const ref = d.verse?.details?.reference;
+      if(verse && ref){
+        vEl.textContent = verse;
+        rEl.textContent = '— '+ref;
+        return;
+      }
+    }
+  } catch(e){}
+  // Fallback: pick by day-of-year
+  const doy = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  const pick = VERSES[doy % VERSES.length];
+  vEl.textContent = pick.v;
+  rEl.textContent = '— '+pick.r;
+}
+
+/* ══ AI DAILY SUMMARY ══ */
+async function genDailySummary(){
+  const el = document.getElementById('sumText');
+  const badge = document.getElementById('sumBadge');
+  el.innerHTML = '<span style="color:var(--dim);font-style:italic">Generating briefing…</span>';
+  badge.textContent = '...';
+  const n=new Date(), today=ds(n), h=n.getHours();
+  const greeting = h<12?'morning':h<17?'afternoon':'evening';
+  const todR = rems.filter(r=>r.date===today);
+  const pending = rems.filter(r=>!r.done&&r.date>=today).length;
+  const urgent = rems.filter(r=>!r.done&&r.cat==='Urgent').length;
+  const fmt = r=>`${r.time?fmtT(r.time):'—'} ${r.title} (${r.cat})`;
+  const prompt = `Generate a warm, encouraging daily briefing for Sir Melvine. It's ${greeting} on ${n.toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric'})} EAT.
+
+Today's reminders: ${todR.length>0?todR.map(fmt).join(', '):'Nothing scheduled today.'}
+Pending this week: ${pending} items. Urgent: ${urgent} items.
+
+Write 2-3 sentences. Be warm and personal. Reference his name naturally. Mention today's items if any. End with brief encouragement. Keep it under 60 words.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const text = data.content?.map(c=>c.text||'').join('')||'';
+    if(text){ el.innerHTML = fmtAI(text); badge.textContent='Live'; return; }
+  } catch(e){}
+  // Fallback
+  const todayCount = rems.filter(r=>r.date===today&&!r.done).length;
+  el.innerHTML = `Good ${greeting}, Sir Melvine! You have <strong>${todayCount} item${todayCount!==1?'s':''}</strong> scheduled for today${urgent>0?` including <strong>${urgent} urgent</strong>`:''}. ${pending>0?`<strong>${pending} items</strong> are pending this week. `:''}Have a blessed and productive day! 🙏`;
+  badge.textContent='Ready';
+}
+
+/* ══ AI WEEKLY SUMMARY ══ */
+async function genWeeklySummary(){
+  const el = document.getElementById('wsText');
+  el.innerHTML = '<span style="color:var(--dim);font-style:italic">Generating weekly summary…</span>';
+  const n=new Date();
+  const ws=wkStart(n); const we=new Date(ws); we.setDate(ws.getDate()+6);
+  const wkR = rems.filter(r=>{const d=new Date(r.date);return d>=ws&&d<=we;});
+  const due = wkR.filter(r=>!r.done).length;
+  const done = wkR.filter(r=>r.done).length;
+  const urg = wkR.filter(r=>r.cat==='Urgent'&&!r.done).length;
+  document.getElementById('wsDue').textContent=due;
+  document.getElementById('wsDone').textContent=done;
+  document.getElementById('wsUrg').textContent=urg;
+  const rangeStr = `${ws.toLocaleDateString('en-KE',{month:'short',day:'numeric'})} – ${we.toLocaleDateString('en-KE',{month:'short',day:'numeric'})}`;
+  document.getElementById('wsRange').textContent=rangeStr;
+  const cats = {};
+  wkR.forEach(r=>{ cats[r.cat]=(cats[r.cat]||0)+1; });
+  const catStr = Object.entries(cats).map(([k,v])=>`${v} ${k}`).join(', ');
+  const prompt = `Write a concise weekly summary for Sir Melvine for the week of ${rangeStr}.
+
+Stats: ${due} items due, ${done} completed, ${urg} urgent. Categories: ${catStr||'none'}.
+Items: ${wkR.slice(0,8).map(r=>`${r.title} (${r.cat}${r.done?', done':''})`).join('; ')||'None this week.'}
+
+Write 2-3 sentences. Be analytical and encouraging. Reference patterns or priorities. Under 70 words.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const text = data.content?.map(c=>c.text||'').join('')||'';
+    if(text){ el.innerHTML=fmtAI(text); return; }
+  } catch(e){}
+  // Fallback
+  if(wkR.length===0){
+    el.innerHTML='<strong>Clear week ahead.</strong> No items scheduled this week. A great time to plan ahead and rest.';
   } else {
-    document.querySelectorAll('.bn-item').forEach(i=>i.classList.remove('active'));
-    if(el)el.classList.add('active');
+    el.innerHTML=`This week has <strong>${due} pending item${due!==1?'s':''}</strong> across ${Object.keys(cats).length} categories.${urg>0?` <strong>${urg} urgent item${urg!==1?'s':''}</strong> need attention.`:''} ${done>0?`You've already completed <strong>${done} item${done!==1?'s':''}</strong> — great progress!`:'Keep going, Sir Melvine!'}`;
   }
-  if(name==='reminders')renderReminders();
-  if(name==='emails')renderEmails('gmail');
-  if(name==='calendar')renderCalendar();
 }
 
-// ── REMINDERS ──
-function getReminders(){return JSON.parse(localStorage.getItem('sm_reminders')||'[]');}
-function saveReminders(r){localStorage.setItem('sm_reminders',JSON.stringify(r));}
-function addReminder(){
-  const t=document.getElementById('remTitle').value.trim();
-  const d=document.getElementById('remDate').value;
-  const c=document.getElementById('remCat').value;
-  if(!t){alert('Please enter a title.');return;}
-  const r=getReminders();
-  r.push({id:Date.now(),title:t,datetime:d,category:c});
-  saveReminders(r);
-  document.getElementById('remTitle').value='';
-  document.getElementById('remDate').value='';
-  renderReminders();
-  updateStats();
-  renderWeekGrid();
-}
-function deleteReminder(id){
-  let r=getReminders().filter(x=>x.id!==id);
-  saveReminders(r);renderReminders();updateStats();renderWeekGrid();
-}
-function renderReminders(){
-  const r=getReminders();
-  const el=document.getElementById('remList');
-  if(!r.length){el.innerHTML='<div class="empty"><div class="empty-ico">&#9201;</div><div class="empty-txt">No reminders yet. Add one above.</div></div>';return;}
-  el.innerHTML=r.sort((a,b)=>new Date(a.datetime)-new Date(b.datetime)).map(x=>{
-    const dt=x.datetime?new Date(x.datetime).toLocaleString('en-KE',{dateStyle:'medium',timeStyle:'short'}):'No time set';
-    return `<div class="rem-item"><span class="rem-cat ${x.category}">${x.category}</span><div class="rem-info"><div class="rem-title">${x.title}</div><div class="rem-time">${dt}</div></div><button class="rem-del" onclick="deleteReminder(${x.id})">&#128465;</button></div>`;
-  }).join('');
+/* ══ NAV ══ */
+function toggleSB(){ sbSlim=!sbSlim; document.getElementById('sidebar').classList.toggle('slim',sbSlim); }
+function toggleAI(){ aiGone=!aiGone; document.getElementById('aiPanel').classList.toggle('gone',aiGone); document.getElementById('aiBtn').classList.toggle('on',!aiGone); }
+
+function go(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+  document.querySelectorAll('.bn-item').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  const nv=document.getElementById('nav-'+name); if(nv)nv.classList.add('on');
+  const bn=document.getElementById('bn-'+name); if(bn)bn.classList.add('on');
+  if(name==='home') renderHome();
+  if(name==='reminders') renderAllRem();
+  if(name==='calendar') renderCal();
 }
 
-// ── WEEK GRID ──
-function renderWeekGrid(){
-  const now=new Date();
-  const dow=now.getDay();
-  const monday=new Date(now);monday.setDate(now.getDate()-(dow===0?6:dow-1));
-  const reminders=getReminders();
-  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  let html='';
+/* ══ HOME ══ */
+function renderHome(){
+  const n=new Date(), today=ds(n);
+  const ws=wkStart(n); const we=new Date(ws); we.setDate(ws.getDate()+6);
+  const todI=rems.filter(r=>r.date===today);
+  const wkI=rems.filter(r=>{const d=new Date(r.date);return d>=ws&&d<=we&&!r.done;});
+  document.getElementById('stToday').textContent=todI.filter(r=>!r.done).length;
+  document.getElementById('stDone').textContent=rems.filter(r=>r.date===today&&r.done).length;
+  document.getElementById('stWeek').textContent=wkI.length;
+  document.getElementById('stTotal').textContent=rems.length;
+  // hero subtitle
+  const heroSub=document.getElementById('heroSub');
+  if(heroSub){
+    const due=todI.filter(r=>!r.done).length, done=rems.filter(r=>r.date===today&&r.done).length;
+    heroSub.textContent=due>0?`${due} item${due!==1?'s':''} today · ${done} completed`:'Nothing scheduled today — have a blessed day 🙏';
+  }
+
+  // week grid
+  const wg=document.getElementById('weekGrid'); if(!wg) return;
+  let wh='';
   for(let i=0;i<7;i++){
-    const d=new Date(monday);d.setDate(monday.getDate()+i);
-    const isToday=d.toDateString()===now.toDateString();
-    const dayRems=reminders.filter(r=>{if(!r.datetime)return false;const rd=new Date(r.datetime);return rd.toDateString()===d.toDateString();});
-    html+=`<div class="day-card${isToday?' today':''}">
-      <div class="day-name">${days[i]}</div>
-      <div class="day-num">${d.getDate()}</div>
-      <div class="day-rem">${dayRems.length?dayRems.map(r=>`<div class="day-rem-item">${r.title}</div>`).join(''):'<span style="color:var(--muted);font-size:9px;">Free</span>'}</div>
+    const d=new Date(ws); d.setDate(ws.getDate()+i);
+    const dstr=ds(d), isT=dstr===today;
+    const items=rems.filter(r=>r.date===dstr);
+    wh+=`<div class="day-col ${isT?'today':''}">
+      <div class="day-head"><div class="day-dn">${d.toLocaleDateString('en-KE',{weekday:'short'})}</div><div class="day-num">${d.getDate()}</div></div>
+      <div class="day-items">
+        ${items.length===0?'<div class="dfree">—</div>':items.slice(0,3).map(r=>`<div class="dchip">${esc(r.title)}</div>`).join('')}
+        ${items.length>3?`<div class="dmore">+${items.length-3}</div>`:''}
+      </div></div>`;
+  }
+  wg.innerHTML=wh;
+
+  const cb={Personal:'var(--red)',Work:'var(--blue)',Urgent:'var(--gold)',Health:'var(--grn)'};
+  const sorted=[...todI].sort((a,b)=>a.time.localeCompare(b.time));
+  document.getElementById('todaySched').innerHTML=sorted.length===0
+    ?`<div class="empty"><div class="empty-ico">✨</div>Free day ahead!</div>`
+    :sorted.map(r=>`<div class="sched-item">
+        <div class="si-time">${r.time?fmtT(r.time):'—'}</div>
+        <div class="si-bar" style="background:${cb[r.cat]||'var(--dim)'}"></div>
+        <div class="si-body"><div class="si-t">${esc(r.title)}</div>${r.note?`<div class="si-n">${esc(r.note)}</div>`:''}</div>
+        <span class="badge b${r.cat[0].toLowerCase()}">${r.cat}</span>
+      </div>`).join('');
+
+  const up=rems.filter(r=>!r.done&&r.date>=today).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
+  document.getElementById('upcomingList').innerHTML=up.length===0
+    ?`<div class="empty"><div class="empty-ico">📋</div>No upcoming reminders</div>`
+    :up.map(r=>`<div class="rem-item">
+        <input type="checkbox" class="rem-cb" ${r.done?'checked':''} onchange="togRem('${r.id}',this.checked)"/>
+        <div class="rem-body"><div class="rem-t">${esc(r.title)}</div><div class="rem-m">${fmtD(r.date)}${r.time?' · '+fmtT(r.time):''}</div></div>
+      </div>`).join('');
+}
+
+/* ══ REMINDERS ══ */
+function addRem(){
+  const title=document.getElementById('rTitle').value.trim();
+  if(!title){toast('Please enter a title');return;}
+  const r={id:Date.now().toString(),title,date:document.getElementById('rDate').value,time:document.getElementById('rTime').value,cat:document.getElementById('rCat').value,note:document.getElementById('rNote').value.trim(),done:false};
+  rems.push(r);save();clrForm();renderAllRem();renderHome();updBadge();schedNotif(r);toast('✓ Reminder added');
+}
+function clrForm(){
+  ['rTitle','rNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rDate').value=ds(new Date());
+  document.getElementById('rTime').value='';
+  document.getElementById('rCat').value='Personal';
+}
+function togRem(id,done){ rems=rems.map(r=>r.id===id?{...r,done}:r); save();renderAllRem();renderHome();updBadge(); }
+function delRem(id){ rems=rems.filter(r=>r.id!==id); save();renderAllRem();renderHome();updBadge();toast('Deleted'); }
+function renderAllRem(){
+  const c=document.getElementById('allRem'); if(!c) return;
+  const sorted=[...rems].sort((a,b)=>{if(a.done!==b.done)return a.done?1:-1;return(a.date+a.time).localeCompare(b.date+b.time);});
+  c.innerHTML=sorted.length===0
+    ?`<div class="empty"><div class="empty-ico">📋</div>No reminders yet. Add your first above!</div>`
+    :sorted.map(r=>`<div class="rem-item">
+        <input type="checkbox" class="rem-cb" ${r.done?'checked':''} onchange="togRem('${r.id}',this.checked)"/>
+        <div class="rem-body">
+          <div class="rem-t ${r.done?'done':''}">${esc(r.title)}</div>
+          <div class="rem-m">${r.date?fmtD(r.date):'No date'}${r.time?' · '+fmtT(r.time):''} · <span class="badge b${r.cat[0].toLowerCase()}">${r.cat}</span>${r.note?'<br>'+esc(r.note):''}</div>
+        </div>
+        <button class="rem-del" onclick="delRem('${r.id}')">✕</button>
+      </div>`).join('');
+}
+function updBadge(){ const n=rems.filter(r=>!r.done).length; const b=document.getElementById('remBadge'); if(b){b.textContent=n;b.style.display=n>0?'':'none';} }
+
+/* ══ CALENDAR ══ */
+function renderCal(){
+  const lbl=document.getElementById('calLbl'); if(!lbl) return;
+  lbl.textContent=new Date(calY,calM).toLocaleDateString('en-KE',{month:'long',year:'numeric'});
+  const g=document.getElementById('calGrid');
+  let h=['S','M','T','W','T','F','S'].map(d=>`<div class="cal-hd">${d}</div>`).join('');
+  const first=new Date(calY,calM,1).getDay(), dim=new Date(calY,calM+1,0).getDate(), tod=new Date();
+  const evSet=new Set(rems.map(r=>r.date));
+  for(let i=0;i<first;i++){const pv=new Date(calY,calM,0-first+i+1);h+=`<div class="cal-d dim">${pv.getDate()}</div>`;}
+  for(let d=1;d<=dim;d++){
+    const dstr=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isT=d===tod.getDate()&&calM===tod.getMonth()&&calY===tod.getFullYear();
+    const isSel=calSel&&dstr===ds(calSel);
+    h+=`<div class="cal-d ${isT?'today':''} ${!isT&&isSel?'sel':''} ${evSet.has(dstr)?'has':''}" onclick="selDay('${dstr}')">${d}</div>`;
+  }
+  g.innerHTML=h; renderCalDay(ds(calSel||tod));
+}
+function selDay(dstr){ calSel=new Date(dstr+'T00:00:00'); renderCal(); }
+function renderCalDay(dstr){
+  const lbl=document.getElementById('calDayTitle'), c=document.getElementById('calDayList'); if(!lbl||!c) return;
+  lbl.textContent=new Date(dstr+'T00:00:00').toLocaleDateString('en-KE',{weekday:'long',month:'long',day:'numeric'});
+  const items=rems.filter(r=>r.date===dstr).sort((a,b)=>a.time.localeCompare(b.time));
+  const cb={Personal:'var(--red)',Work:'var(--blue)',Urgent:'var(--gold)',Health:'var(--grn)'};
+  c.innerHTML=items.length===0
+    ?`<div class="empty"><div class="empty-ico">✨</div>Nothing scheduled.</div>`
+    :items.map(r=>`<div class="sched-item">
+        <div class="si-time">${r.time?fmtT(r.time):'—'}</div>
+        <div class="si-bar" style="background:${cb[r.cat]||'var(--dim)'}"></div>
+        <div class="si-body"><div class="si-t">${esc(r.title)}</div>${r.note?`<div class="si-n">${esc(r.note)}</div>`:''}</div>
+        <span class="badge b${r.cat[0].toLowerCase()}">${r.cat}</span>
+      </div>`).join('');
+}
+function chMon(d){ calM+=d; if(calM<0){calM=11;calY--;} if(calM>11){calM=0;calY++;} renderCal(); }
+
+/* ══ NEBULA AI ══ */
+function buildSys(){
+  const n=new Date(), today=ds(n);
+  const ws=wkStart(n); const we=new Date(ws); we.setDate(ws.getDate()+6);
+  const todR=rems.filter(r=>r.date===today);
+  const wkR=rems.filter(r=>{const d=new Date(r.date);return d>=ws&&d<=we;});
+  const pend=rems.filter(r=>!r.done).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const fmt=r=>`  [${r.done?'✓':'○'}] ${r.date} ${r.time||'—'} | ${r.title} (${r.cat})${r.note?' — '+r.note:''}`;
+  return `You are Nebula, an elite AI command assistant for Sir Melvine's personal Command Center. He is a Christian and values faith, productivity, and excellence.
+
+Current time: ${n.toLocaleString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})} EAT
+
+TODAY: ${todR.length?todR.map(fmt).join('\n'):'Nothing today.'}
+THIS WEEK: ${wkR.length?wkR.map(fmt).join('\n'):'Nothing this week.'}
+PENDING (top 10): ${pend.slice(0,10).map(fmt).join('\n')||'None.'}
+TOTALS: ${rems.length} total · ${rems.filter(r=>r.done).length} done · ${pend.length} pending
+
+Be concise, warm, professional — like a sharp executive assistant who also shares faith. Occasionally reference scripture naturally when relevant. Keep responses focused.`;
+}
+
+async function sendAI(){
+  const inp=document.getElementById('aipTa');
+  const text=inp.value.trim(); if(!text) return;
+  inp.value=''; inp.style.height='auto';
+  hideChips();
+  addMsg('u',text);
+  const tid=addThinking();
+  chatHist.push({role:'user',content:text});
+  try {
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSys(),messages:chatHist})
+    });
+    const data=await res.json();
+    rmEl(tid);
+    const reply=data.content?.map(c=>c.text||'').join('')||'I had trouble responding. Try again.';
+    addMsg('a',reply);
+    chatHist.push({role:'assistant',content:reply});
+  } catch(e){
+    rmEl(tid);
+    addMsg('a','⚠️ Connection error. Please check your network.');
+  }
+}
+function chipSend(btn){ document.getElementById('aipTa').value=btn.textContent.replace(/^[\p{Emoji}\s]+/u,'').trim(); hideChips(); sendAI(); }
+function hideChips(){ const c=document.getElementById('chips'); if(c) c.style.display='none'; }
+function addMsg(role,text){
+  const w=document.getElementById('aipMsgs');
+  const d=document.createElement('div'); d.className=`msg ${role}`;
+  d.innerHTML=`<div class="mb">${role==='u'?esc(text):fmtAI(text)}</div>`;
+  w.appendChild(d); w.scrollTop=w.scrollHeight;
+}
+function addThinking(){
+  const id='t'+Date.now(), w=document.getElementById('aipMsgs');
+  const d=document.createElement('div'); d.id=id;
+  d.innerHTML=`<div class="thinking"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  w.appendChild(d); w.scrollTop=w.scrollHeight; return id;
+}
+function rmEl(id){ const e=document.getElementById(id); if(e) e.remove(); }
+function fmtAI(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`([^`]+)`/g,'<code style="font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px">$1</code>')
+    .replace(/\n/g,'<br>');
+}
+function resetAI(){
+  chatHist=[];
+  document.getElementById('aipMsgs').innerHTML=`
+    <div class="msg a"><div class="mb">Cleared, Sir Melvine 🙏 — still here. What do you need?</div></div>
+    <div class="chips" id="chips">
+      <button class="chip" onclick="chipSend(this)">📋 Summarise my day</button>
+      <button class="chip" onclick="chipSend(this)">✝️ Give me a devotional thought</button>
+      <button class="chip" onclick="chipSend(this)">⚠️ Any urgent items?</button>
     </div>`;
-  }
-  document.getElementById('weekGrid').innerHTML=html;
-}
-renderWeekGrid();
-
-// ── STATS ──
-function updateStats(){
-  const r=getReminders();
-  document.getElementById('statReminders').textContent=r.length;
-}
-updateStats();
-
-// ── CALENDAR ──
-let calDate=new Date();
-function renderCalendar(){
-  const yr=calDate.getFullYear();const mo=calDate.getMonth();
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('calMonth').textContent=`${months[mo]} ${yr}`;
-  const first=new Date(yr,mo,1).getDay();const days=new Date(yr,mo+1,0).getDate();
-  const today=new Date();
-  let html='';
-  const heads=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  heads.forEach(h=>html+=`<div class="cal-head">${h}</div>`);
-  for(let i=0;i<first;i++)html+=`<div></div>`;
-  for(let d=1;d<=days;d++){
-    const isToday=d===today.getDate()&&mo===today.getMonth()&&yr===today.getFullYear();
-    html+=`<div class="cal-cell${isToday?' today':''}">${d}${isToday?'<div class="cal-dot"></div>':''}</div>`;
-  }
-  document.getElementById('calGrid').innerHTML=html;
-}
-function changeMonth(dir){calDate.setMonth(calDate.getMonth()+dir);renderCalendar();}
-renderCalendar();
-
-// ── EMAILS ──
-const gmailEmails=[
-  {from:'Nebula Assistant',subject:'Your Morning Briefing',preview:'Good morning Sir Melvine! Here is your daily briefing...',time:'9:00 AM',unread:true,color:'#F2A72B'},
-  {from:'Google',subject:'Security alert for your account',preview:'We noticed a new sign-in to your Google Account...',time:'8:32 AM',unread:true,color:'#4B8EFF'},
-  {from:'LinkedIn',subject:'You have 5 new connection requests',preview:'People you may know: John Smith and 4 others...',time:'Yesterday',unread:true,color:'#30D47A'},
-  {from:'GitHub',subject:'[nebula] Pull request merged',preview:'Your pull request has been successfully merged...',time:'Yesterday',unread:false,color:'#9B6EFF'},
-];
-const zohoEmails=[
-  {from:'HR Team',subject:'Leave Request Approved',preview:'Your leave request for March 15-16 has been approved...',time:'10:15 AM',unread:true,color:'#4B8EFF'},
-  {from:'Client · ABC Corp',subject:'Project Update Required',preview:'Hi Melvin, could you please send us the latest project update...',time:'9:45 AM',unread:true,color:'#E8364A'},
-  {from:'Manager',subject:'Weekly Team Meeting',preview:'Reminder: Weekly team meeting tomorrow at 10 AM...',time:'Yesterday',unread:false,color:'#30D47A'},
-];
-function renderEmails(tab){
-  const list=tab==='gmail'?gmailEmails:zohoEmails;
-  document.getElementById('emailTabContent').innerHTML=`<div class="email-list">${list.map(e=>`<div class="email-item${e.unread?' unread':''}"><div class="email-avatar" style="background:${e.color}22;color:${e.color}">${e.from[0]}</div><div class="email-body"><div class="email-from">${e.from}<span class="email-time">${e.time}</span></div><div class="email-subject">${e.subject}</div><div class="email-subject">${e.preview}</div></div></div>`).join('')}</div>`;
-}
-function switchEmailTab(el,tab){document.querySelectorAll('.etab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderEmails(tab);}
-renderEmails('gmail');
-
-// ── AI PANEL ──
-let aiVisible=true;
-const welcomeMsg={role:'bot',text:"Good day, Sir Melvine! I'm your Nebula assistant. How can I help you today? You can type or use your voice &#127908;",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})};
-let desktopMsgs=[welcomeMsg];
-let mobileMsgs=[{...welcomeMsg}];
-
-function renderMsgs(container,msgs){
-  container.innerHTML=msgs.map(m=>`<div class="msg ${m.role}"><div class="msg-bubble">${m.text}</div><div class="msg-time">${m.time}</div></div>`).join('');
-  container.scrollTop=container.scrollHeight;
-}
-renderMsgs(document.getElementById('aiMsgs'),desktopMsgs);
-
-function toggleAI(){
-  aiVisible=!aiVisible;
-  document.getElementById('aiPanel').classList.toggle('hidden',!aiVisible);
 }
 
-// ── NEBULA LIVE AI ──
-const NEBULA_WEBHOOK='https://api.nebula.gg/webhooks/triggers/trig_069aca72e3f4776a8000fa0446ad7837/webhook';
-const NEBULA_SECRET='nh8f3nsWxn7ux4GCOoOmuLxwUZCmtXsP35eB0fciSIY';
-
-async function callNebula(message,history){
-  const payload={message,history:history.slice(-10).map(m=>({role:m.role,text:m.text}))};
-  const resp=await fetch(NEBULA_WEBHOOK,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','X-Webhook-Secret':NEBULA_SECRET},
-    body:JSON.stringify(payload)
+/* ══ NOTIFICATIONS ══ */
+function reqNotif(){
+  if(!('Notification'in window)){toast('Not supported');return;}
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){toast('✓ Notifications enabled');document.getElementById('bellBtn').classList.add('on');schedAll();schedBriefing();}
+    else toast('Enable in browser settings');
   });
-  if(!resp.ok)throw new Error('HTTP '+resp.status);
-  const data=await resp.json();
-  return data.reply||data.response||data.message||data.output||(typeof data==='string'?data:'...');
+}
+function schedNotif(r){
+  if(Notification.permission!=='granted'||!r.date||!r.time) return;
+  const dt=new Date(`${r.date}T${r.time}`); if(isNaN(dt)) return;
+  const ms=dt-Date.now();
+  if(ms-600000>0&&sets.warn10) setTimeout(()=>new Notification('⏰ Sir Melvine — 10 min',{body:r.title}),ms-600000);
+  if(ms>0&&sets.alerts) setTimeout(()=>new Notification('🔔 Sir Melvine',{body:r.title+(r.note?'\n'+r.note:'')}),ms);
+}
+function schedAll(){ rems.filter(r=>!r.done).forEach(schedNotif); }
+function schedBriefing(){
+  if(Notification.permission!=='granted'||!sets.briefing) return;
+  const n=new Date(), nx=new Date(n); nx.setHours(9,0,0,0);
+  if(n>=nx) nx.setDate(nx.getDate()+1);
+  setTimeout(()=>{fireBriefing();setInterval(fireBriefing,86400000);},nx-n);
+}
+function fireBriefing(){
+  const today=ds(new Date());
+  const items=rems.filter(r=>r.date===today&&!r.done);
+  new Notification('☀️ Good Morning, Sir Melvine!',{body:items.length>0?`Today: ${items.map(r=>r.title).join(', ')}`:'No items today. Have a blessed day! 🙏'});
+}
+function updBriefingNxt(){
+  const n=new Date(), nx=new Date(n); nx.setHours(9,0,0,0);
+  if(n>=nx) nx.setDate(nx.getDate()+1);
+  const ms=nx-n, h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000);
 }
 
-function addTypingIndicator(cont){
-  const el=document.createElement('div');el.className='msg bot';el.setAttribute('data-typing','1');
-  el.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-  cont.appendChild(el);cont.scrollTop=cont.scrollHeight;return el;
+/* ══ SETTINGS ══ */
+function saveSetting(k,v){ sets[k]=v; localStorage.setItem('sm_set',JSON.stringify(sets)); toast('✓ Saved'); if(k==='briefing'&&v) schedBriefing(); }
+function loadSets(){
+  document.getElementById('togBriefing').checked=sets.briefing!==false;
+  document.getElementById('togAlerts').checked=sets.alerts!==false;
+  document.getElementById('tog10').checked=sets.warn10!==false;
+  if(Notification.permission==='granted') document.getElementById('bellBtn').classList.add('on');
 }
+function installPWA(){ if(dInstall){dInstall.prompt();dInstall.userChoice.then(r=>{if(r.outcome==='accepted')toast('✓ App installed!');dInstall=null;});}else toast('Browser menu › Add to Home Screen'); }
 
-function aiKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsg();}}
-async function sendAIMsg(){
-  const inp=document.getElementById('aiInput');
-  const txt=inp.value.trim();if(!txt)return;
-  const t=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
-  desktopMsgs.push({role:'user',text:txt,time:t});
-  inp.value='';autoResize(inp);inp.disabled=true;
-  const cont=document.getElementById('aiMsgs');
-  renderMsgs(cont,desktopMsgs);
-  const typing=addTypingIndicator(cont);
-  try{
-    const reply=await callNebula(txt,desktopMsgs);
-    typing.remove();
-    desktopMsgs.push({role:'bot',text:reply,time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
-  }catch(err){
-    typing.remove();
-    desktopMsgs.push({role:'bot',text:"I'm having trouble connecting right now, Sir Melvine. Please try again in a moment.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
-  }
-  inp.disabled=false;inp.focus();
-  renderMsgs(cont,desktopMsgs);
+/* ══ UTILS ══ */
+function save(){ localStorage.setItem('sm_rem',JSON.stringify(rems)); }
+function ds(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function wkStart(d){ const s=new Date(d); s.setDate(d.getDate()-d.getDay()); s.setHours(0,0,0,0); return s; }
+function fmtT(t){ if(!t)return''; const[h,m]=t.split(':').map(Number); return`${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; }
+function fmtD(dstr){
+  if(!dstr)return'No date';
+  try{ const d=new Date(dstr+'T00:00:00'),today=ds(new Date()),tom=ds(new Date(Date.now()+86400000));
+    if(dstr===today)return'Today'; if(dstr===tom)return'Tomorrow';
+    return d.toLocaleDateString('en-KE',{weekday:'short',month:'short',day:'numeric'}); }
+  catch{ return dstr; }
 }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500); }
+</script>
 
-// MOBILE AI
-function openMobileAI(){
-  document.getElementById('aiModal').classList.add('open');
-  renderMsgs(document.getElementById('aiMsgsMobile'),mobileMsgs);
-}
-function closeMobileAI(e){
-  if(!e||e.target===document.getElementById('aiModal'))
-    document.getElementById('aiModal').classList.remove('open');
-}
-function aiKeydownMobile(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsgMobile();}}
-async function sendAIMsgMobile(){
-  const inp=document.getElementById('aiInputMobile');
-  const txt=inp.value.trim();if(!txt)return;
-  const t=new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
-  mobileMsgs.push({role:'user',text:txt,time:t});
-  inp.value='';autoResize(inp);inp.disabled=true;
-  const cont=document.getElementById('aiMsgsMobile');
-  renderMsgs(cont,mobileMsgs);
-  const typing=addTypingIndicator(cont);
-  try{
-    const reply=await callNebula(txt,mobileMsgs);
-    typing.remove();
-    mobileMsgs.push({role:'bot',text:reply,time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
-  }catch(err){
-    typing.remove();
-    mobileMsgs.push({role:'bot',text:"I'm having trouble connecting right now, Sir Melvine. Please try again in a moment.",time:new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})});
-  }
-  inp.disabled=false;inp.focus();
-  renderMsgs(cont,mobileMsgs);
-}
-
-// VOICE
-let recognition=null;
-function setupRecognition(inputId,micId){
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){alert('Voice not supported in this browser. Try Chrome.');return null;}
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=1;
-  r.onresult=e=>{document.getElementById(inputId).value=e.results[0][0].transcript;document.getElementById(micId).classList.remove('listening');};
-  r.onerror=()=>document.getElementById(micId).classList.remove('listening');
-  r.onend=()=>document.getElementById(micId).classList.remove('listening');
-  return r;
-}
-function toggleVoice(){
-  const mic=document.getElementById('micBtn');
-  if(mic.classList.contains('listening')){if(recognition)recognition.stop();mic.classList.remove('listening');return;}
-  recognition=setupRecognition('aiInput','micBtn');
-  if(recognition){mic.classList.add('listening');recognition.start();}
-}
-function toggleVoiceMobile(){
-  const mic=document.getElementById('micBtnMobile');
-  if(mic.classList.contains('listening')){if(recognition)recognition.stop();mic.classList.remove('listening');return;}
-  recognition=setupRecognition('aiInputMobile','micBtnMobile');
-  if(recognition){mic.classList.add('listening');recognition.start();}
-}
-
-// AUTO RESIZE TEXTAREA
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
-
-// SERVICE WORKER
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+<script>
+if('serviceWorker'in navigator) addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
