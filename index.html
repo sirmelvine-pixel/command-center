@@ -138,6 +138,29 @@ nav { background:var(--surface); border-bottom:1px solid var(--border); padding:
 .delete-btn:hover { color:var(--red); }
 @media (max-width:1100px) { .stats-row { grid-template-columns:repeat(2,1fr); } .right-panel { display:none; } .sidebar { width:240px; } }
 @media (max-width:768px) { .sidebar { display:none; } .panels-row { grid-template-columns:1fr; } .stats-row { grid-template-columns:repeat(2,1fr); } .greeting-actions { display:none; } }
+
+.hub-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.hub-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.hub-card-header { padding:18px 20px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+.hub-card-icon { font-size:24px; }
+.hub-card-title { font-size:16px; font-weight:700; }
+.hub-card-subtitle { font-size:12px; color:var(--muted); margin-top:2px; }
+.hub-card-body { padding:18px 20px; }
+.hub-card-body p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:16px; }
+.hub-schedule { font-size:12px; color:var(--accent2); background:rgba(124,106,247,0.12); border:1px solid rgba(124,106,247,0.25); border-radius:8px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px; margin-bottom:16px; }
+.hub-btn { display:inline-block; background:var(--accent); color:#fff; border:none; border-radius:10px; padding:9px 18px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; text-decoration:none; }
+.hub-btn:hover { background:var(--accent2); }
+.hub-btn-outline { background:none; border:1px solid var(--border); color:var(--text); margin-left:8px; }
+.hub-btn-outline:hover { background:var(--surface2); }
+.hub-status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); display:inline-block; margin-right:6px; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.hub-banner { background:linear-gradient(135deg,#2d2060 0%,#1a1d27 60%); border:1px solid var(--border); border-radius:var(--radius); padding:24px 28px; margin-bottom:4px; }
+.hub-banner h2 { font-size:20px; font-weight:700; margin-bottom:6px; }
+.hub-banner p { color:var(--muted); font-size:14px; line-height:1.5; }
+.hub-quick-links { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+.hub-pill { background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:20px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.hub-pill:hover { border-color:var(--accent); color:var(--accent2); }
+@media (max-width:768px) { .hub-grid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -148,6 +171,7 @@ nav { background:var(--surface); border-bottom:1px solid var(--border); padding:
     <button class="nav-tab active" onclick="showPage('dashboard',this)">Dashboard</button>
     <button class="nav-tab" onclick="showPage('calendar',this)">Calendar</button>
     <button class="nav-tab" onclick="showPage('reminders',this)">Reminders</button>
+    <button class="nav-tab" onclick="showPage('hub',this)">Command Hub</button>
   </div>
   <div class="nav-right">
     <button class="btn btn-primary" onclick="openModal('event-modal')">+ Add Event</button>
@@ -261,6 +285,93 @@ nav { background:var(--surface); border-bottom:1px solid var(--border); padding:
       </div>
     </div>
 
+
+    <!-- COMMAND HUB -->
+    <div class="page" id="page-hub">
+
+      <div class="hub-banner">
+        <h2>&#9670; Command Hub</h2>
+        <p>Your automated intelligence layer &mdash; daily briefings, meeting prep, weekly reviews, and cross-tool alerts all running on schedule.</p>
+        <div class="hub-quick-links">
+          <span class="hub-pill" onclick="showPage('dashboard',document.querySelectorAll('.nav-tab')[0])">&#128197; Dashboard</span>
+          <span class="hub-pill" onclick="showPage('calendar',document.querySelectorAll('.nav-tab')[1])">&#128467; Calendar</span>
+          <span class="hub-pill" onclick="showPage('reminders',document.querySelectorAll('.nav-tab')[2])">&#128276; Reminders</span>
+          <a class="hub-pill" href="https://nebula.gg" target="_blank">&#129302; Open Nebula</a>
+        </div>
+      </div>
+
+      <div class="hub-grid">
+
+        <!-- Daily Briefing -->
+        <div class="hub-card">
+          <div class="hub-card-header">
+            <div class="hub-card-icon">&#127774;</div>
+            <div>
+              <div class="hub-card-title">Daily Briefing</div>
+              <div class="hub-card-subtitle"><span class="hub-status-dot"></span>Active &mdash; runs every day at 9 AM EAT</div>
+            </div>
+          </div>
+          <div class="hub-card-body">
+            <div class="hub-schedule">&#128336; Daily at 9:00 AM EAT</div>
+            <p>Starts your day with a personalised email covering your inbox snapshot, today's calendar events, GitHub activity (open PRs &amp; issues), and quick links back to the Command Hub.</p>
+            <button class="hub-btn" onclick="showToast('Daily Briefing will arrive at 9 AM EAT tomorrow')">&#128197; View Schedule</button>
+            <button class="hub-btn hub-btn-outline" onclick="showToast('Check sirmelvine@gmail.com for your latest briefing')">&#128140; Latest Email</button>
+          </div>
+        </div>
+
+        <!-- Meeting Prep -->
+        <div class="hub-card">
+          <div class="hub-card-header">
+            <div class="hub-card-icon">&#128203;</div>
+            <div>
+              <div class="hub-card-title">Meeting Prep</div>
+              <div class="hub-card-subtitle"><span class="hub-status-dot"></span>Active &mdash; weekdays at 8:30 AM EAT</div>
+            </div>
+          </div>
+          <div class="hub-card-body">
+            <div class="hub-schedule">&#128336; Weekdays at 8:00 AM EAT</div>
+            <p>Before each morning meeting you get a full briefing: attendee context, 3&ndash;5 smart talking points, recent email threads from attendees, and a suggested follow-up action.</p>
+            <button class="hub-btn" onclick="showToast('Meeting Prep sends 30 min before your first morning meeting')">&#128203; View Schedule</button>
+            <button class="hub-btn hub-btn-outline" onclick="showToast('Check sirmelvine@gmail.com for your meeting prep briefing')">&#128140; Latest Email</button>
+          </div>
+        </div>
+
+        <!-- Weekly Review -->
+        <div class="hub-card">
+          <div class="hub-card-header">
+            <div class="hub-card-icon">&#128202;</div>
+            <div>
+              <div class="hub-card-title">Weekly Review</div>
+              <div class="hub-card-subtitle"><span class="hub-status-dot"></span>Active &mdash; Fridays at 5 PM EAT</div>
+            </div>
+          </div>
+          <div class="hub-card-body">
+            <div class="hub-schedule">&#128336; Every Friday at 5:00 PM EAT</div>
+            <p>Closes out your week with a full review: meetings summary, top email threads, GitHub activity, wins &amp; highlights, next week preview, and your top 3 recommended Monday actions.</p>
+            <button class="hub-btn" onclick="showToast('Weekly Review arrives every Friday at 5 PM EAT')">&#128202; View Schedule</button>
+            <button class="hub-btn hub-btn-outline" onclick="showToast('Check sirmelvine@gmail.com for your latest weekly review')">&#128140; Latest Email</button>
+          </div>
+        </div>
+
+        <!-- Cross-Tool Alerts -->
+        <div class="hub-card">
+          <div class="hub-card-header">
+            <div class="hub-card-icon">&#128680;</div>
+            <div>
+              <div class="hub-card-title">Cross-Tool Alerts</div>
+              <div class="hub-card-subtitle"><span class="hub-status-dot"></span>Active &mdash; weekdays at 10 AM EAT</div>
+            </div>
+          </div>
+          <div class="hub-card-body">
+            <div class="hub-schedule">&#128336; Weekdays at 10:00 AM EAT</div>
+            <p>Scans Gmail for urgent, ASAP, or deadline emails and your calendar for imminent meetings missing links or with scheduling conflicts. Delivers a prioritised URGENT / IMPORTANT / FYI digest &mdash; or an All Clear if everything looks good.</p>
+            <button class="hub-btn" onclick="showToast('Cross-Tool Alerts scan runs weekdays at 10 AM EAT')">&#128680; View Schedule</button>
+            <button class="hub-btn hub-btn-outline" onclick="showToast('Check sirmelvine@gmail.com for your latest alert digest')">&#128140; Latest Email</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </main>
 
   <!-- AI CHAT -->
